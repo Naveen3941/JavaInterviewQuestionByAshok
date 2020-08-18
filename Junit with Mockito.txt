@@ -1,0 +1,54 @@
+Junit with Mocking
+------------------
+
+->What is Unit Testing?
+  Unit testing means process of individual component is called unit testing.
+
+->What is Junit?
+  ->junit is a open source framework
+  ->Junit means java unit testing
+
+->Assert methods availble in Junit?
+  Assert methods for validating the expected result and actual result.
+
+->What is Mockito?
+  ->if your component is dependent on some other component then we go for mockito.
+    ex:contorller is dependent on service layer.
+  ->Mocking is the process of creating substitute object for real object.
+
+->When to use Mocking?
+  ->if dependent component are not ready
+
+   ->to isolate our component for unit testing.
+
+there are several mock frameworks availble in market
+-----------------------------------------------------
+Mock framework are categorized into two types
+
+a)Proxy based mock framework
+   Ex: Easy Mock and Mockito
+
+b)Byte code Manipulation based mock framework
+              or
+   Class Remapping mock framework
+    Ex:Power Mock and JMockito
+
+Limitation of Proxy based framework
+-----------------------------------
+->doesnot support for private methods mocking
+
+->doesnot support for final methods mocking
+
+->doesnot support for static methods mocking
+
+->doesnot support for final class mocking
+
+to avoid the above limitations we are going to use byte code manipulation based mock framework.
+
+@SPY
+----
+@SPY annotation is used to create real object and spy on that real object.
+
+@InjectMock
+------------
+@InjectMock annotation is used to be which injection should be performed.

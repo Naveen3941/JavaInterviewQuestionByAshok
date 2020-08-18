@@ -1,0 +1,172 @@
+-> What is web service?
+
+    we can communicate with different language and different platform.
+
+-> types of web services?
+
+  there are two types of web service
+   -> soap
+   -> restful 
+
+-> what is soap ?
+
+  -> soap stands for simple object acess protocol.
+  -> and  it is xml based protocol for accessing web service
+  -> by using soap you will be interact with other programming language application.
+  -> soap defines its own security is called ws security. soap is secured compared to restful web services.
+
+-> what is restful webservice?
+
+  ->it is a Architectural style and not a protocol. here there is no protocols means no rules.
+  -> Language and platform independent
+  ->different data formats xml,html,json,text.
+
+-> what is stateless?
+  
+   -> whenever client request to server it treats a new request by using http protocol.
+
+-> What is Cacheing?
+
+   -> caching is a process of storeing server response in client side so that client need not to make again and again request to server.
+
+
+-> Jax-rs Annotations?
+
+  ->@get: it get the data from database
+  ->@Post: it is used for create and insert purpose
+  ->@put : it Update purpose only we used.
+  ->@Deletete: it is used to delete.
+  ->@Produces: which format we are given to the server.
+  ->@Consume:which format we want to get the data.
+
+There are several technologies are availble in the market to develop distibuted application.
+1)CORBA
+
+2)RMI
+
+3)EJB : Ejb is language dependent (only one java application can communicate with another java application)
+
+4)WEB Service: Integration of two different application running on same server or different server is called Webservice.
+  ------------
+  web service are two types
+ a)SOAP based web service
+ b)Restful Service
+SOAP based web service:
+-----------------------
+Basic Profile 1.0 released WS-I team.
+after that Sun MicroSystem released one api is called JAX-RPC(Java Api for XML based remote procedure call)
+it have some drawbacks java 1.5 featueres not supported.
+
+after that Basic 1.1 released WS-I team and sun microsystem release one api is called JAX-WS( Java Api for XML based web service)
+We can develop web service in java in two ways
+i)JAX-RPC
+ii)JAX-WS
+if you can develop either JAX-RPC or JAX-WS is an SOAP based web services
+
+Restful Service:
+----------------
+JAX-RS(Java Api for XML based rest service)
+->Unique identity everyendpoint
+->it will support different data types like JSON,XML,Text,HTML
+
+
+ 
+
+
+Why we came into RestfulServices even though we hava SOAP based web services.
+------------------------------------------------------------------------------
+
+
+
+
+
+There are two types of integration
+a) Homogenious Integration
+b) HeteroGenious Integration
+
+a) Homogenious Integration: if two application are developed by same language is called Homogenious Integration.
+
+b) Heterogenious Integration: if twwo application are developed by different language is called Heterogenious Integration.
+
+Every Http status code will one message
+---------------------------------------
+1XX    Information
+2XX    Success
+
+204    There is no response body means( provider method as return typa as void)
+3XX    Redirect
+4XX    ClientSideError
+
+404  if data type mismatched
+405   http method type mismatched
+5XX    ServerSideError
+
+What is Design Pattern?
+ 
+Design Pattern are used to reduce code and time so that application  performance will be improved.
+
+Json : (JavaScript Object Notation)
+-----------------------------------
+
+It is the process of Object representation in Javascript language. it takes less memory
+
+-> One pair indicate one object.
+
+->Data must be key and value format only.
+
+->Key must be quoted and value will be quoted if the type of varible is String.
+
+WebService are two types:
+-------------------------
+->Soap(Simple Object Access Proticol)/JAX-WS(Java Api for XML Web Service)
+
+->Rest(Representaional State Transfer)/JAX-RS(Java Api for XML based Restful Service)
+
+  Rest Stands for Representation means global at
+  State means Data
+  Transform means Sending and receiveing
+
+Rest: It is process of sending and receiving global data between two application
+----
+
+Here golbal formats are XML and Json
+
+-> these two formats can be understand any language like(Java,.Net and other)
+
+-> compare to XML .Json is lightweight 
+
+->XML or Json cannot sent over Network. so rest uses Http protocol to transfer data.
+
+->Sun MicroSystem has provide basic Api for JAX-RS
+
+->Third Party vendors are implemented ex:Jersy
+
+Jersy is ApiOnly for JAX-RS
+
+Jersy 1.X (web.xml based)
+
+Jersy 2.X(Annotation and Configuration)
+
+1st Party -----> SunMicro System (Api for JAX-RS)
+
+3rd Party ------> Vendor( Jersy,RestEasy)
+
+QueryParam:
+----------
+
+->These are used to send data key, value format.
+
+
+Matrix Param:
+-------------
+
+->it is also behave like query param but symbol changed ';' and compare to fast.
+
+->How to convert Java Object to Json?
+-------------------------------------
+
+By using Jackso api we have to convert java object to json.
+
+HTTP Req & Http Response
+-------------------------
+

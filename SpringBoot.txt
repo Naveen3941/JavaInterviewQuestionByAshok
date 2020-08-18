@@ -1,0 +1,62 @@
+What is SpringBoot?
+--------------------
+Spring boot is  Existing Spring Framework
+                         +
+                 Embedded Server(Apache Tomcat and Jetty)
+                         -
+                 XML Configuration
+Advantage of Spring boot
+------------------------
+Spring boot is best suitable for scratch development projects.
+
+Disadvantages of Spring Boot
+----------------------------
+if you are migrating spring to spring boot application it takes so much
+ time. that is the drawback of spring boot.
+
+
+What is Actuator
+-----------------
+To monitor our application.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Difference between .properties file and .yml file :
+--------------------------------------------------
+
+          .properties file                                                 .yml file
+          -----------------                                                -----------
+   1) it stores data in sequential format                           1) it stores data in hierachical format
+   2) it supports only key-value pair basically String values       2) it support key-value pair as well as map,list&scale type
+   3) this file specifically used for Java.                         3) this file type are used many of the languages like Java,Python and ROR.
+   4)if you want to handle multiple profiles. in this case you      4) if you want to handle multiple profiles. in this case file type just need to manage.
+     need to manage individual file for each profile. 
+   5) it will support @PropertySourceAnnotation                      5) it will not support @PropertySourceAnnotation
+

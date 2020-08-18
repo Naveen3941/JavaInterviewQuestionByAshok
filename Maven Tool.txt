@@ -1,0 +1,11 @@
+->what is maven;
+
+  ->Maven is a Project Management Tool. it is used for projectsbuild and dependency.
+  ->Maven project eliminates the adding set of jars in each project.
+       ->what is Build Tool?
+   ->A Build tool take care of everything for building a process. generate the source code,compiles source code,
+     packages compiled code into JAR of ZIP file,install the packages code in local repository,server repository and central repository.
+    ->There are three types of Repositories?
+       ->Local Repositories:means .m2 file in your system.
+       ->Central Repositories: is located on the web. it has been created by the apache maven community itself.
+       ->Remote Repositories:company specific library or custom library.

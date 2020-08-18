@@ -1,0 +1,73 @@
+What is Persistence Store
+--------------------------
+->Persistence means storage.
+
+->the place where we will save our data is called as Persistent Store.
+
+Persistent Operations
+---------------------
+-> Inserting data
+-> Updating data
+-> Deleting data
+-> Retrive data
+
+Persistent Technologies
+------------------------
+
+->Persistent technologies are used to develop persistent logic.
+->persistent logic is used to perform persistent operations in persistent store.
+-> we have several technologies to develop persistent logic
+   a) Java JDBC
+   b) Spring JDBC
+   c) ORM Framework
+   d) spring Data
+
+Best Practises to develop persistent logic
+------------------------------------------
+-> We should maintain persistent logic as separate layer
+
+->In persistent layer we should follow table per dao concept(means every table have one dao class is required)
+
+->if reqired name is more than 30 characters ignore vowels.
+
+Database Installation
+----------------------
+1) Database Server
+2) Database Client
+
+-> In Company environment, DB server will be installed by DB admins in Remote machines.
+
+-> After installing DB server, DB team will share Database details to team members.
+       ->URL
+       ->UName
+       ->Password
+       ->Service Name
+Persistent Technologies in Java
+--------------------------------
+1) Java JDBC
+2) Spring JDBC
+3) ORM Framework
+4) Spring ORM
+5) Spring Data
+
+Common Persistence Operations
+-----------------------------
+a)Insert one record
+b)update record
+c)insert multiple record
+
+-> To perform above operations we need to write methods in Dao interface and
+   we should implement those methods in DaoImpl class.
+-> if we writing same inserting logic multiple times means it is boiler plate code.
+-> if you are connecting only one table then we go for Spring Data but if u are using complex table then we go for other Spring ORM
+   technology.
+
+What is Spring Data?
+---------------------
+Spring Data is a part of Spring Framwork. if you use spring data no need to write
+to much of code. 
+
+What is Marker Interface?
+To instruct the extra functionality means if you are implementing serilaizble interface the jvm will identified.
+
+->if we create user defined repository interface. then implementation class will be created in run time for our user defined repository interface(Proxy class)

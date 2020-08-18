@@ -1,0 +1,241 @@
+->how to introduction our self ;
+
+  tell me about yourself?
+
+Good Morning Sir, I am Naveen. Currently I am working with Ojas Innovative Technologies.
+having 4.6years of experience in Java 1.7, Spring and Hibernate. i am also aware about
+deployment in Jboss.
+My current project is OBS means Ojas Business Suite. it is our internal project. it is web based 
+application.
+
+
+->what is microservices?
+
+  microservices is break our large system into number of independent collaborating components.
+
+
+
+
+
+***********************************************************************************Jenkins
+-> What is Jenkins?
+   
+   Jenkins means Continuous development and continuous integration. 
+
+********************************************************************************Spring************************** 
+
+->what is spring coniguration and done with 1 example;
+
+->spring boot annotation;
+
+->how to tell which technologies we are used;
+
+-> What is Log4j?
+   Log4j is a framework. framework means semi build application means a common code will be already developed.
+
+->Difference between HashTable and HashMap?
+
+  HashTable is also key and value pair format. HashTable is Synchronized. means at a time allow only one thread. HashTable does not allow null key and null value.
+
+  HashMap also key and value pair format. HashMap is not Synchronized. HashMap allows one null key and multiple null values.
+
+-> Why we are moving into Spring MVC?
+
+   because of easy to work with, flexibility,seperation of concern.
+
+-> Explain about Memory Model?
+    Register is memory area
+
+-> What is JIRA?
+   JIRA is a Project Management Tool. we can manage the defects, we can manage the test cases,  we can manage the sprint, we can manage the project. we can do lot more things in JIRA.
+    https://jira.ojas.com/ this is url from jira. 
+
+-> what is java streams?
+   Stream is does not store the elements. it is import java.util.stream;
+   int a[]={2,5,6,7,8,9};
+   
+   we want to find min value in the array.
+   int min=IntStream.of(a).min().getAsInt(); 
+    
+   we can find min,max,sum and avg.
+   IntSummaryStatstices statstices=IntStream.of(a).summaryStatstices(); it will print all min,max,sum,avg values;
+   system.out.println(stastices);
+    
+   if we want to find first three numbers and not allow duplicates
+   IntStream.of(a).distinict.sorted.limit(3).sum();
+
+  
+  l2.stream().sorted(Comparator.comparingInt(EmployeeModel::getPincode).reversed()).limit(3).map(EmployeeModel::getName).forEach(System.out::println);
+
+
+
+l2.stream().sorted(Comparator.comparingInt(EmployeeModel::getPincode).reversed()).limit(3).map(EmployeeModel::getName).forEach(System.out::println);
+
+-> How to create a  resource in restful web service?
+  
+
+
+
+
+what is marker inteface?
+ 
+if an interface have no methods is called marker interface. we have to check by using instanceOf 
+operator that object is belongs to that interface or not.
+
+package example;
+interface Permission {
+	
+}
+public class MarkableInterfaceExample implements Permission{
+        static void show()
+        {
+        	System.out.println("showwwwwww");
+        }
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+          MarkableInterfaceExample m=new MarkableInterfaceExample();
+          if(m instanceof Permission)
+          {
+        	 show();
+          }
+          else
+          {
+        	  System.out.println("not permission......");
+          }
+	}
+
+}
+
+
+-> What is Serialization?
+
+Serialization means converting the object state into bytestream is called serialization. deserialization means converting byte stream into object stream is called deserialization.
+
+-> What is Immutable Object in Java? How we can create our own Immutable class in java.
+
+    Immutable class means that once an object is created we can not change the value is called Immutable Class. In java all the wrapper class like Integer,boolean,byte,short and String class is 
+    
+     Immutable.
+    -> The class Must be declared as final and data member variable must be as final.
+
+
+
+-> Regular Expression in Password?
+
+  Password validation regexp
+--------------------------
+ ^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$
+ This regex will enforce these rules:
+ At least one upper case English letter, (?=.*?[A-Z])
+ At least one lower case English letter, (?=.*?[a-z])
+ At least one digit, (?=.*?[0-9])
+ At least one special character, (?=.*?[#?!@$%^&*-])
+ Minimum eight in length .{8,} (with the anchors)
+
+Email Validations
+-------------------------------
+1. return Pattern.matches("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9_-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$",number);
+
+2.System.out.println(Pattern.matches("([a-zA-Z0-9]*)([@]{1})([a-zA-Z]*)([.]+)([a-zA-Z]*)([.]?)([a-zA-Z]*)", "a11sdddds@ffffammm.com.in"));
+
+
+///////////////////////////////////////////////////EMail Code........////////////////////////////////////////
+
+MimeMessage message = sender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+
+		try {
+			helper.setTo(email);
+			helper.setText("Hi" + l1.getUsername() + "you have succesfully registration)");
+			helper.setSubject("Mail From Spring Boot");
+		} catch (MessagingException e) {
+			e.printStackTrace();
+
+		}
+		sender.send(message);
+
+
+//applicationproperties
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=challanaveen521@gmail.com
+spring.mail.password=8985352910
+spring.mail.properties.mail.smtp.starttls.enable=true
+spring.mail.properties.mail.smtp.starttls.required=true
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.connectiontimeout=5000
+spring.mail.properties.mail.smtp.timeout=5000
+spring.mail.properties.mail.smtp.writetimeout=5000
+
+
+<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+
+
+///////////////////////////////////////////Hibernate.........///////////////////////////////////////////
+
+
+
+*****************************************************************************Spring Boot**************************************************
+
+-> Why do we need Spring Auto Configuration?
+
+   before spring boot we use spring mvc. in spring mvc we need to configuere dispatcher servlet, view resolver,  component-scan all these in xml files. coming to spring 
+ 
+   -boot we no need to write that much of code.
+
+-> what is an inmemory database?
+
+   inmemory database means h2 data base. when it stores the data at start the application and destroy the data when it stop the application.
+
+   -> for suppose when we use oracle database we need to install the database and all these. in here there is no need to install in h2 database.
+
+   -> h2 is a releational database management system written in java. it is embedded in java application or run in the client or server.
+
+   -> just adding the H2 runtime jar into dependencies should be sufficient.
+
+-> what is @Restcontroller?
+
+   -> spring RestController annotation is used to create restful web service.
+
+   ->it contain two annotation 
+        
+         ->@Controller
+         
+         ->@RequestBody
+
+
+-> What is @Controller?
+
+   ->if you declare @controller it is a controller class.
+
+   ->that class is front controller and responsible to handle user request and return apporporiate resoponse.
+
+-> what is @service
+
+   if you declare @service it is a service class.
+
+   it holds the bussiness logic.
+    
+   @service Annotation is a specialization of @component annotation.
+
+-> what is @Repository?
+
+   this annotations indicates that class deals with crud operation.
+
+-> what is inversion of control?
+
+   inversion of control means order of creation. noramlly first we create objects and next assign values to that object. but inversion of control is first assiging 
+
+   the values and next create the objects for particular values.
+
+-> what is @Component
+ 
+  @Component is a class level annotation
+   
+
+   
+   ********************************************************************************************************************************************************

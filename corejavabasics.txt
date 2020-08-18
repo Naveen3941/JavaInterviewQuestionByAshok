@@ -1,0 +1,212 @@
+-> what is String?
+  
+   String is an collection of characters and string is immutable. immutable means it cannot be changed. String class implements Serializble interface,comparable interface
+ 
+   and charactersequence interface. there are two ways to create string objects in java
+   
+    ->1.String literal
+
+    ->2.new keyword
+
+     1.String literal means for example if you create String a="java"; again you are trying to create String b="java" in jvm checks whether String is already 
+       availble in string pool area or not. if it is Exist in String pool area it will assign same reference otherwise it creates new instance.
+
+     2.String s1=new String(); every time it create new instance.
+
+-> difference between equals and== method in String?
+  
+    equals() method it compares content of the string not refernce of the string. == method compares reference of the string.
+
+-> difference between path and classpath.
+
+  -> the path is set for used javac and java tool.
+
+  ->  if you ae saving the java source file in JDK/bin directory you no need to set path and classpath because of all the tools will be availble in the jdk directory. 
+
+  ->  path is used to define where executable files in system and class path is used to define where .class files in system.
+
+->difference between jdk,jre and jvm?
+
+  ->jdk is an java development kit. it is physically exist and it contains jre and development tools means javac,java.
+
+  ->jre is an java runtime environment. it is physically exist and it contains jvm and otherfiles and rt.jar 
+
+  ->jvm is an java virtual machine. it is does not physically exist.
+      
+      jvm perform three operation
+         ->load the code
+         -> verify the code
+         ->execute the code.
+
+-> jvm internal working?
+
+    it contains
+   -> classloader: classloader is the subclass of jvm. it load the .class files ,verify the code and execute the code.
+
+   -> memory area: memory area consist of classarea,heap,stack. class area all staic varibles will stored. heap area will store in non static varibles and methods.
+                   
+                   stack area it stores all threads.
+   
+   ->program counter:program counter it creates address of the each instruction.
+
+-> jit compiler?
+
+   jit compiler is an  just in time compiler. it reduces the time duration  of compilation. before we are using interprter it executes statement by statement.
+
+-> what is a method?
+  
+   the behaviour of the object is called method. 
+   
+-> oops concept?
+
+   Class: class is collection of objects.it is a logical entity and it phsically not exist.
+          class contains 
+          1.methods
+          2.blocks
+          3.constructors.
+          
+   Object:object is an instance of class.it is physically exist.
+         object has three characterstices.
+         ->state:represent the data of object.
+         ->behavior:behaviour of the object.
+         ->identity:every object has unique id;
+ 
+   inheritace:inheritace is the acquireing the properties of parent class to child class is known as inheritance. if a class A have method m1 and class B also have m1 
+            
+             method. Class C extends A and B then that ambugity will occur because of jvm would not get which method to call. thats why java does not supported 
+          
+             multiple inheritance. 
+
+   Polymorphism: polymorphism means many forms. single action in different ways. there are two types op polymorphism
+
+                 1.compile time polymorphism
+                 2.runtime polymorphism
+              
+                 1.compiletime polymorphism: if you overloaded static method is called Compiletime polymorphism.
+                 2.Runtime polymorphism: if a method is overridden in run time rather than compile time.
+
+   Encapsulation: Encapsulation is a wrapping of code and data together in a single unit is called Encapsulation. bean class is the example of encapsulation all the data 
+ 
+                   members are private. if we want get the data by using get method.
+
+   Abstraction: Abstraction is the hideing the internal details and only showing the functionality.
+
+
+-> what is Abstract class?
+  
+   A class which is a declare abstract keyword is called Abstract class. abstract class contains abstract methods and non abstract methods. abstract class contains 
+
+   static varibles,constructors but we can not instance of objects.   
+
+-> what is interface?
+
+   interface is an pure abstraction(100%). it contains abstract methods,default methods and static methods also. in interface we can not instancation
+   
+   advantages of interface:
+   
+   ->interface is achieved loosely coupling
+
+
+   ->interface supports multiple inheritance.
+
+/////////////////////////////////////////////////////////////////////////////////Exeption Handling////////////////////////////////////////////////////////////////////
+
+->what is Exception Handling?
+
+  Exception Handling is power full mechanism to handle runtime error. 
+
+  advantage of Exception handling: for example we are writing a program it contains 200 lines. if an exception occured in 20th line the rest of the program will not be 
+
+   executed. if we are using exception handling we can avoid these tpe of problems by using try and catch.
+
+->hierarchy of exception class?
+
+  throwable class is super class of all exception classes. it have two sub classes exception and error.
+  
+ Exception:ClassNotFoundException
+           IOException
+           SqlException
+           Runtime Exception: Airthematic Exception
+                              Nullpointer Exception
+                              ArrayIndexoutofbound Exception.
+                              NumberFormat Exception.
+           
+ Error:StackOverflowError
+       OutOfMemoryError.
+       VirtualMachineEror.
+
+
+->Diference between Checked Exception and UnChecked Exception.
+
+  Checked Exception: if an class is directly inherit to throwable class except runtime exception and error 
+                      is called checked exception. checked exception at compile time for example
+
+                      ->ClassNotFoundException
+                      ->SqlException
+                       ->IOException. 
+ Unchecked Exception: if an class extends runtime exception is called unchecked exception.
+                              Airthematic Exception
+                              Nullpointer Exception
+                              ArrayIndexoutofbound Exception.
+                              NumberFormat Exception.
+  error: error is irrecoverable means out of memory.
+
+-> difference between ClassNotFoundException and NOdefError
+
+   if we are loading a class by using Class.forName(). if it is class is not found then it throws class not found exception.
+   when .class present in during compile time and it will be not there in runtime is called nodeffound exception.
+
+-> Java Exception keywords?
+
+     try: the try keyword is used to specify should write an may exception code inside try block. try must be folled by catch block or finally block.
+
+    catch:the catch block is used to handle exception by the declaring the type of exception.
+
+-> Multiple Catch block?
+   At a time only one catch block is executed.
+   All catch block must be order from most specific to most general.
+
+->throw keyword?
+
+  throw keyword is an explicitly throw an exception. it throws either checked exception or unchecked exception. the throw keyword is mainly used to throw 
+  custom exception.
+   throw new IOException("sorry device error:");
+
+->throws keyword?
+  the throws keyword is used to declare an excepion. it gives information to the programmer there may be exception occured so it is better to the programmer to provide
+
+   exception. only checked exception because unchecked exception under programmer control.
+
+////////////////////////////////////////Multi Threading//////////////////////////////////////////////////////////////////////////////////////////////////
+
+-> what is multithreading?
+
+   multithreading is a process of executig multiple threads simantanously is called multithreading. 
+
+-> what is a thread?
+
+   thread is a light weight and thread shares common memory area and so save the memory. for example if one thread is efect it does not affect another thread 
+
+   because of thread is independent.
+
+-> life cycle of thread?
+
+   thread can be five states 
+   1.new: if you create instance of thread is called new state.
+   2.runnable:after invoke the start method the thread is runnable state.
+   3.running:after thread schedular has selected it is running state.
+   4.non-runnable:if thread has an waiting state is called non-runnable state.
+   5.a thread is terminated or dead state.
+
+->  Sleep method in java?
+    
+    the sleep method of thread class is used to sleep specified amount of time.
+
+-> Can we start thread twice?
+  
+    No.
+
+
+   
+
+   
