@@ -1,0 +1,120 @@
+	Spring Boot Configuration Properties
+		 (Reading Input file)
+=> By using @Value or env.getProperty("") we can read one
+  key data at a time. ie if we want to read 2000 keys then
+   @Value/env.getProperty should be written 2000 times.
+  Code becomes lengthy/complex.
+
+=> So, use bulk load ie one key data copy to one variable
+   based on name(keyName=variableName).
+
+=> in properties file 
+   prefix.key=value
+ex: app.pid=10; 
+
+=> ** At model/runner class level provide prefix using :
+          @ConfigurationProperties("prefix")
+ex:  @ConfigurationProperties("app")
+
+** If variable Name is not matched with any key name
+   (like spell is mistake) then no error/exception
+   and even no data is provided for that variable.
+   ie variable holds data type default value.
+   Like int=>0 , String=> null, double=> 0.0..etc
+
+Q) When to use @Value, env.getProperty() and bulk load?
+A) Less keys (like 3 keys)
+    use @Value for programmer defined class(Annotation Config)
+    use env.getProperty for pre-defined class(Java Config)
+   For more keys(25 keys)
+     use bulk load [@ConfigurationProperties]
+-------------------------------------------------------
+* We are writing keys in properties file manully by 
+  checking model/runner class. But this time when we
+  press ctrl+space key is auto-detected.
+
+
+#1 Goto class(model/runner)
+#2 Place mouse over @ConfigurationProperties
+   it might be showing yellow color under line
+#3 Then click on option it is showing like
+  Add spring-boot-configuration-processor to pom.xml
+  (click on same)
+#4 then in pom.xml one dependency added like:
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-configuration-processor</artifactId>
+  <optional>true</optional>
+</dependency>
+#5 Above code will take (in reverse way) 
+   one variable=> one key and that is detected in properties
+   file when we press ctrl+space
+
+** in simple keys are detected in properties file based on
+   variable names and prefix given in model/runner class
+==============Example==============================
+1. application.proprties file
+#Here prefix is app (any prefix is fine)
+# press ctrl+space to see possible keys
+app.pid=55
+app.code=NIT
+app.version=99.99
+app.status=false
+2. Runner class code
+package in.nit.runner;
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
+@Component
+@ConfigurationProperties("app")
+public class MyBulkDataReader 
+implements CommandLineRunner
+{
+
+	//define variables (1 key-> 1 variable)
+	private int pid; //no error/no exception/no value
+	private String code;
+	private double version;
+	private boolean status;
+
+	@Override
+	public void run(String... args) throws Exception {
+		//print current class object
+		System.out.println(this);
+	}
+	//**** gerenate set/get methods
+	//alt+shift+S,R>SelectAll>OK
+	public int getPid() {
+		return pid;
+	}
+	public void setPid(int pid) {
+		this.pid = pid;
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
+	public double getVersion() {
+		return version;
+	}
+	public void setVersion(double version) {
+		this.version = version;
+	}
+	public boolean isStatus() {
+		return status;
+	}
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+	//toString(alt+shift+S,S>OK)
+	@Override
+	public String toString() {
+		return "MyBulkDataReader [pid=" + pid + ", code=" + code + ", version=" + version + ", status=" + status + "]";
+	}
+	
+	
+}

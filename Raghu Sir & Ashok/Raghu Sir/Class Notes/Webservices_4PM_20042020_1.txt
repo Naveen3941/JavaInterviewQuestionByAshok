@@ -1,0 +1,248 @@
+          Rules To Write RestController :: Path and Method Type
+	                 Date : 20/04/2020
+   ------------------------------------------------------------------
+1. Every RestController must have Path at class level. 
+   It must be unique.
+   Path (URL) is case-sensitive.
+
+   @Path("/emp")
+   class EmpRest{ }   -- Valid
+
+   @Path("/adm")
+   class AdmRest{ }   -- Valid
+
+   class PrtRest{ }  (Invaild, it has no @Path )
+
+   @Path("/emp")
+   class TestRest{ } (Invaild, it is already exist at EmpRest class)
+
+   @Path("/Emp")
+   class OneRest { }   -- Vaild
+
+2. Every Java Method must have one Http Method only.
+   Path at Method level is optional for only one Method Type one time.
+
+ @Path("/emp")
+ class  EmpRest{      -- vaild
+   @GET
+   void show(){ }
+ }
+
+ @Path("/emp")
+ class  EmpRest{      -- Invaild. Two methods found with same Type(GET)
+   @GET                           without Path.
+   void show(){ }
+   @GET
+   void find(){ }      ** At Max we can define one JavaMethod without Path
+ }                           with one Http Method Type.
+
+ @Path("/emp")
+ class  EmpRest{      -- Vaild
+   @GET
+   void show(){ }
+   @GET
+   @Path("/fnd")
+   void find(){ }
+ }
+
+  @Path("/emp")
+ class  EmpRest{      -- Vaild
+   @GET
+   @Path("/shw")
+   void show(){ }
+   @GET
+   @Path("/fnd")
+   void find(){ }
+ }
+
+
+  @Path("/emp")
+ class  EmpRest{      -- Vaild
+   @GET
+   void show(){ }
+   @POST
+   void find(){ }
+ }
+
+ @Path("/emp")
+ class  EmpRest{      -- Vaild.  
+   @GET
+   void show(){ }
+   @POST
+   void save(){ }
+   @PUT
+   void update(){ }
+   @DELETE
+   void remove(){ }
+ }
+
+ @Path("/emp")
+ class  EmpRest{      -- Vaild.  One Method can exist without path for @GET
+   @GET
+   void showA(){ }
+   @GET
+   @Path("/b")
+   void showB(){ }
+   @GET
+   @Path("/c")
+   void showC(){ }
+   @GET
+   @Path("/d")
+   void showD(){ }
+ }
+
+
+ @Path("/emp")
+ class  EmpRest{      -- Invaild. One Java Method only one MethodType.  
+   @GET
+   @POST
+   void show(){ }
+ }
+====================Producer code=================================
+1. pom.xml
+	<properties>
+		<maven.compiler.source>13</maven.compiler.source>
+		<maven.compiler.target>13</maven.compiler.target>
+	</properties>
+	<dependencies>
+		<!-- Container Servlet -->
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet</artifactId>
+			<version>2.30</version>
+		</dependency>
+
+		<!-- HK2 -->
+		<dependency>
+			<groupId>org.glassfish.jersey.inject</groupId>
+			<artifactId>jersey-hk2</artifactId>
+			<version>2.30</version>
+		</dependency>
+
+	</dependencies>
+
+2. RestController- Employee
+package in.nit.controller;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+
+@Path("/emp")
+public class EmployeeRestController {
+
+	@GET
+	public String showA() {
+		return "GET-EMP-SHOWA";
+	}
+	
+	@GET
+	@Path("/b")
+	public String showB() {
+		return "GET-EMP-SHOWB";
+	}
+	
+	@POST
+	public String showC() {
+		return "POST-EMP-SHOWC";
+	}
+	
+	@POST
+	@Path("/d")
+	public String showD() {
+		return "POST-EMP-SHOWD";
+	}
+}
+
+3. RestController -- Product
+package in.nit.controller;
+
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+
+@Path("/prod")
+public class ProductRestController {
+
+	@GET
+	public String showA() {
+		return "PROD-SHOWA-GET";
+	}
+	
+	@DELETE
+	public String showB() {
+		return "PROD-SHOWB-DELETE";
+	}
+	
+	@POST
+	public String showC() {
+		return "PROD-SHOWC-POST";
+	}
+	
+	@PUT
+	public String showD() {
+		return "PROD-SHOWD-PUT";
+	}
+}
+
+4. web.xml
+<web-app>
+  <servlet>
+  	<servlet-name>sample</servlet-name>
+  	<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+  	<init-param>
+  		<param-name>jersey.config.server.provider.packages</param-name>
+  		<param-value>in.nit</param-value>
+  	</init-param>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>sample</servlet-name>
+  	<url-pattern>/rest/*</url-pattern>
+  </servlet-mapping>
+</web-app>
+
+========================= Consumer App==========================
+1.pom.xml (same as producer app)
+package in.nit;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
+
+public class ConsumerTest {
+
+ public static void main(String[] args) {
+     String URI="http://localhost:2019/Jersey2PathMethodProducerApp";
+     //String path="/rest/prod";
+     //String path="/rest/emp";
+     //String path="/rest/emp/b";
+     //String path="/rest/emp";
+     //String path="/rest/emp/d";
+     String path="/rest/prod";
+     
+     try {
+     	Client c=ClientBuilder.newClient();
+     	WebTarget wt=c.target(URI).path(path);
+     	
+     	Invocation.Builder builder=wt.request();
+     	
+     	//Response resp=builder.get();
+     	//Response resp=builder.post(Entity.text("NONE"));
+     	//Response resp=builder.put(Entity.text("NONE"));
+     	Response resp=builder.delete();
+     	
+     	System.out.println(resp.getStatus());
+     	System.out.println(resp.getStatusInfo());
+     	System.out.println(resp.readEntity(String.class));
+     	
+     	
+     } catch (Exception e) {
+     	e.printStackTrace();
+     }
+ }
+}
+=============================================================================

@@ -1,0 +1,292 @@
+*)Role Management:-
+Step#1 Create one DB table as given below
+        CREATE TABLE usertab (                
+           un varchar(25),        
+           pass varchar(25)        
+         )
+insert few records
+insert into usertab values('SAM','SAM','ADMIN');
+insert into usertab values('KHAN','KHAN','VENDOR');
+insert into usertab values('RAM','RAM','CUSTOMER');
+
+Step#2 Define Database connection using Singleton pattern
+    Single=one ton=Object (one object = one Db connection Object)
+
+package in.nit.db;
+import java.sql.Connection;
+import java.sql.DriverManager;
+public class DbContext {
+	private static Connection con=null;
+	//one DB connection=Singleton pattern
+	static {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con=DriverManager.getConnection("jdbc:mysql://localhost:3306/webservices", "root", "root");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static Connection getConn() {
+		return con;
+	}
+}
+
+Step#3 Define a Validator that communicates to DB using un/pwd also verify role
+package in.nit.validator;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.List;
+
+import in.nit.db.DbContext;
+
+public class UserValidator {
+
+	public static boolean validate(String un, String pwd,List<String> allowedRoles) {
+		String sql="select un,urole from usertab where un=? and pass=?";
+		Connection con=null;
+		boolean flag=false;
+		try {
+			con=DbContext.getConn();
+			PreparedStatement pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, un);
+			pstmt.setString(2, pwd);
+			
+			ResultSet rs=pstmt.executeQuery();
+			if(rs.next()) { //un,pwd should exist + role must be matching
+				String urole=rs.getString(2);
+				if(allowedRoles.contains(urole))
+					flag=true; //use exist
+			}
+			//else flag=false;
+		} catch (Exception e) {
+			flag=false; //not exist
+			e.printStackTrace();
+		}
+		return flag;
+	}
+
+}
+
+Step#4 Define A filter to implement security concept
+package in.nit.filter;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.List;
+import java.util.StringTokenizer;
+
+import javax.annotation.security.DenyAll;
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.container.ResourceInfo;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
+import in.nit.validator.UserValidator;
+
+
+public class SecureFilter 
+implements ContainerRequestFilter
+{
+
+	/** My Requirement: 
+	 * Read details of current rest controller class 
+	 * and current method details 
+	 * by using Reflection API
+	 * */
+	@Context //reading objects from container 
+	private ResourceInfo resource; 
+	
+	/***
+	 * My Requirement:
+	 * Read Header Param Data from container objects
+	 *  
+	 */
+	@Context
+	private HttpHeaders headers;
+
+
+	@Override
+	public void filter(ContainerRequestContext req) throws IOException {
+		//current method details
+		Method method=resource.getResourceMethod();
+		if(!method.isAnnotationPresent(PermitAll.class)) {
+			//-----------Check for Deny All----------------
+			if(method.isAnnotationPresent(DenyAll.class)) {
+				req.abortWith(
+						Response.status(Status.FORBIDDEN)
+						.entity("You can not access this!!")
+						.build()
+						);
+				return;
+			}
+			//---Deny All end--------------
+			
+			
+			//--------If Roles Allowed----------------------
+			if(method.isAnnotationPresent(RolesAllowed.class)) {
+				//read header param Authorization
+				List<String> authList=headers.getRequestHeader("Authorization");
+				if(authList==null || authList.isEmpty()) {
+					req.abortWith(
+							Response.status(Status.BAD_REQUEST)
+							.entity("No Security Details Found!!")
+							.build()
+							);
+					return;
+				}
+				String auth=authList.get(0);
+				//******* Get Username and password
+				//==> Remove Basic Space
+				auth=auth.replaceAll("Basic ", "");
+				//==> Decode Data
+				byte[] arr=Base64.getDecoder().decode(auth.getBytes());
+				auth=new String(arr);
+				//=> Tokenize data
+				StringTokenizer str=new StringTokenizer(auth, ":");
+				String un=str.nextToken(); //read username
+				String pwd=str.nextToken();// read password
+				
+				//read roles given at Java method level
+				String[] rolesArr=method.getAnnotation(RolesAllowed.class).value();
+				List<String> allowedRoles=Arrays.asList(rolesArr);
+				
+				boolean exist=UserValidator.validate(un,pwd,allowedRoles);
+				if(!exist) {
+					req.abortWith(Response.status(Status.UNAUTHORIZED).entity("Invaild Un/pwd or Invaild Role").build());
+					return;
+				}//not exist
+				
+			}
+			//---roles allowed end-------------------------
+		
+		}//if ends
+	}
+}
+
+
+Step#5 Define RestController with RoleManagement Annotations
+package in.nit.controller;
+
+import javax.annotation.security.DenyAll;
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+
+@Path("/pay")
+public class PaymentRestController {
+
+	@GET
+	@Path("/all")
+	@PermitAll
+	public String showAll() {
+		return "WELCOME TO ALL CONSUMERS!!";
+	}
+	
+	@GET
+	@Path("/none")
+	@DenyAll
+	public String showNone() {
+		return "NO ONE CAN SEE THIS MESSAGE!!";
+	}
+	
+	@GET
+	@Path("/few")
+	@RolesAllowed({"ADMIN","VENDOR"})
+	public String showFew() {
+		return "WELCOME TO ADMIN/VENDOR";
+	}
+}
+
+
+Step#6 FC Configuration
+package in.nit.config;
+
+import javax.ws.rs.ApplicationPath;
+
+import org.glassfish.jersey.server.ResourceConfig;
+
+import in.nit.filter.SecureFilter;
+
+@ApplicationPath("/rest")
+public class AppConfig 
+	extends ResourceConfig
+{
+
+	public AppConfig() {
+		packages("in.nit");
+		//activate filter
+		register(SecureFilter.class);
+	}
+}
+
+Step#7 pom.xml
+<properties>
+		<failOnMissingWebXml>false</failOnMissingWebXml>
+		<maven.compiler.source>13</maven.compiler.source>
+		<maven.compiler.target>13</maven.compiler.target>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet</artifactId>
+			<version>2.30</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.inject</groupId>
+			<artifactId>jersey-hk2</artifactId>
+			<version>2.30</version>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.46</version>
+		</dependency>
+
+	</dependencies>
+
+Step#8 Run Application and provide security details using POSTMAN
+
+ GET  http://localhost:2019/JerseyAdvancedSecurityBasicOne/rest/pay/few SEND
+
+   Authorization
+    Tye                BasicAuth         [UPDATE REQUEST]
+
+      User           SAM
+      Password       SAM
+
+Result:
+    WELCOME TO ADMIN/VENDOR
+-----------------------------------------------------------------------
+                      Mini Project#2
+          Consumer                      Producer
+   Spring MVC + RestClient        Jersey/JAX-RS + Hibernate with JPA
+   
+
+*** Pre-Required: HK2, Hibernate Basic Annotations, Spring Basic MVC knowledge
+                 JSON, MediaTypes(@Produces/@Consumes), Params @QueryParam
+
+*)Producer:-
+pom.xml 
+Model class
+DbContext
+DAL : IDao,DaoImpl
+SL  : IService,ServiceImpl
+RestController
+AppConfig
+
+*)Consumer:-
+pom.xml
+RestConsumer/Service call
+Controller(UI)
+JSP Page

@@ -1,0 +1,465 @@
+       Integration#1 - Servlets - JSP - Hibernate (CURD OPERATIONS)
+     ---------------------------------------------------------------
+
+CURD Operations are implemented in 4 Stages. Those are:
+Stage-I   REGISTER Operation (UI->Data->DB) (Line Number#10)
+Stage-II  SELECT Operations (DB->Data->UI) (Line Number#264)
+Stage-III DELETE Operations (Remove data at DB using UI)
+Stage-IV  UPDATE Operation  (Modify data at DB using UI)
+
+----------Common Setup Files---------------------------------------
+1. Model class
+2. hibernate.cfg.xml
+3. HibernateUtil
+
+
+Stage-I # Register Operation (UI->Data->DB)
+ DAO = Data Access Object (Which communicates to DB)
+
+Step#1 Create Maven Web Project
+> File > new > Maven Project > Next > search 'maven-archetype-webapp'
+> choose same > next > enter details
+         GroupId  : in.nit
+     ArtifatcId   : HibernateServletJspApp
+        Version   : 1.0
+> Finish
+
+Step#2 Update Build path
+> Right click on Project > build path .. > configure build path
+> Click on Library > Edit JDK/JRE To workspace default
+> Add Library > Server Runtime > Choose tomcat > Apply and Finish
+
+Step#3 pom.xml
+<properties>
+		<maven.compiler.source>13</maven.compiler.source>
+		<maven.compiler.target>13</maven.compiler.target>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>5.4.10.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.12</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.46</version>
+		</dependency>
+	</dependencies>
+
+Step#4 Model class, hibernate.cfg.xml and HibernateUtil
+package in.nit.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import lombok.Data;
+
+@Data
+@Entity
+@Table(name="stdtab")
+public class Student {
+	@Id
+	@Column(name="sid")
+	private Integer stdId;
+	@Column(name="sname")
+	private String stdName;
+	@Column(name="sfee")
+	private Double stdFee;
+}
+
+<?xml version="1.0" encoding="UTF-8"?>
+<hibernate-configuration>
+	<session-factory>
+		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/hibernate</property>
+		<property name="hibernate.connection.username">root</property>
+		<property name="hibernate.connection.password">root</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQL55Dialect</property>
+		<property name="hibernate.show_sql">true</property>
+		<property name="hibernate.format_sql">false</property>
+		<property name="hibernate.hbm2ddl.auto">create</property>
+		<mapping class="in.nit.model.Student"/>
+	</session-factory>
+</hibernate-configuration>
+
+package in.nit.util;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
+public class HibernateUtil {
+
+	private static SessionFactory sf;
+
+	static {
+		sf=new Configuration().configure().buildSessionFactory();
+	}
+	
+	public static SessionFactory getSf() {
+		return sf;
+	}
+}
+
+
+
+
+Step#5 UI (index.jsp/StudentReg.jsp) under webapp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"
+    isELIgnored="false"
+    %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<H2>WELCOME TO STUDENT REGISTER PAGE!</H2>
+<form action="register" method="POST">
+<pre>
+ID   : <input type="text" name="sid"/>
+NAME : <input type="text" name="sname"/>
+FEE  : <input type="text" name="sfee"/>
+ <input type="submit" value="Register"/>
+</pre>
+</form>
+${msg}
+</body>
+</html>
+
+
+Step#6 DAO Code 
+package in.nit.dao;
+
+import in.nit.model.Student;
+
+public interface IStudentDao {
+
+	/**
+	 * This Method takes model class object as input
+	 * and returns PrimaryKey(Integer as)Output
+	 * 
+	 */
+	public Integer saveStudent(Student s);
+}
+
+package in.nit.dao.impl;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import in.nit.dao.IStudentDao;
+import in.nit.model.Student;
+import in.nit.util.HibernateUtil;
+
+public class StudentDaoImpl implements IStudentDao {
+
+	@Override
+	public Integer saveStudent(Student s) {
+		Session ses=HibernateUtil.getSf().openSession();
+		Transaction tx=null;
+		Integer id=null;
+		try(ses) {
+			tx=ses.beginTransaction();
+			
+			//operations
+			id=(Integer) ses.save(s);
+			
+			tx.commit();
+		} catch (Exception e) {
+			if(tx!=null && tx.getStatus().canRollback()) {
+				tx.rollback();
+			}
+			e.printStackTrace();
+		}
+		return id;
+	}
+
+}
+
+
+Step#7 Servlet class
+package in.nit.servlet;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import in.nit.dao.IStudentDao;
+import in.nit.dao.impl.StudentDaoImpl;
+import in.nit.model.Student;
+
+//@WebServlet("/register") //no web.xml is required
+public class StudentRegisterServlet extends HttpServlet{
+
+	@Override
+	protected void doPost(
+			HttpServletRequest req, 
+			HttpServletResponse resp) 
+					throws ServletException, IOException 
+	{
+		//1. Read Form Data
+		String  s1=req.getParameter("sid");
+		String  stdName=req.getParameter("sname");
+		String  s2=req.getParameter("sfee");
+		
+		//2. Parse Data if required
+		int stdId=Integer.parseInt(s1);
+		double stdFee=Double.parseDouble(s2);
+		
+		//3. Create Model class object and set data to it
+		Student sob=new Student();
+		sob.setStdId(stdId);
+		sob.setStdName(stdName);
+		sob.setStdFee(stdFee);
+		
+		//4. Create Dao object and call saveStudent
+		IStudentDao dao=new StudentDaoImpl();
+		Integer id=dao.saveStudent(sob);
+		
+		//5. construct message and send to UI
+		String message="Student saved with Id:"+id;
+		req.setAttribute("msg", message);
+		
+		
+		//6. Move to JSP Page using Dispatcher
+		RequestDispatcher rd=req.getRequestDispatcher("index.jsp");
+		rd.forward(req, resp);
+	}
+}
+
+
+
+Step#8 web.xml code
+
+<web-app>
+ 	<servlet>
+ 		<servlet-name>abc</servlet-name>
+ 		<servlet-class>in.nit.servlet.StudentRegisterServlet</servlet-class>
+ 	</servlet>
+ 	<servlet-mapping>
+ 		<servlet-name>abc</servlet-name>
+		<url-pattern>/register</url-pattern> 	
+ 	</servlet-mapping>
+</web-app>
+
+> Right click on Project > Run As > Run on server > Enter URL in address
+> Enter data in Form > Click on submit.
+============================================================================
+       Integration#1 - Servlets - JSP - Hibernate (CURD OPERATIONS)
+     ----------Stage-II  SELECT Operations (DB->Data->UI)-----------------
+
+1. IStudentDao : Add a new method to fetch all rows as List<T>
+
+package in.nit.dao;
+import java.util.List;
+import in.nit.model.Student;
+public interface IStudentDao {
+	public Integer saveStudent(Student s);
+	public List<Student> getAllStudents();
+}
+
+2. StudentDaoImpl : Provide Implementation using HQL
+   to fetch all rows 
+package in.nit.dao.impl;
+
+import java.util.List;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
+
+import in.nit.dao.IStudentDao;
+import in.nit.model.Student;
+import in.nit.util.HibernateUtil;
+
+public class StudentDaoImpl implements IStudentDao {
+
+	@Override
+	public Integer saveStudent(Student s) {
+		Session ses=HibernateUtil.getSf().openSession();
+		Transaction tx=null;
+		Integer id=null;
+		try(ses) {
+			tx=ses.beginTransaction();
+			
+			//operations
+			id=(Integer) ses.save(s);
+			
+			tx.commit();
+		} catch (Exception e) {
+			if(tx!=null && tx.getStatus().canRollback()) {
+				tx.rollback();
+			}
+			e.printStackTrace();
+		}
+		return id;
+	}
+	
+	@Override
+	public List<Student> getAllStudents() {
+		String HQL=" from "+Student.class.getName();
+		//String HQL=" from in.nit.model.Student ";
+		Session ses=HibernateUtil.getSf().openSession();
+		List<Student> list=null;
+		try(ses) {
+			Query q=ses.createQuery(HQL);
+			list=q.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+
+}
+
+3. Define Servlet that reads data from DB and send to UI
+    [StudentDataServlet.jsp]
+package in.nit.servlet;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import in.nit.dao.IStudentDao;
+import in.nit.dao.impl.StudentDaoImpl;
+import in.nit.model.Student;
+
+@WebServlet("/all")
+public class StudentDataServlet extends HttpServlet{
+
+	@Override
+	protected void doGet(
+			HttpServletRequest req, 
+			HttpServletResponse resp) 
+					throws ServletException, IOException 
+	{
+	
+		//1. create object to DAO
+		IStudentDao dao=new StudentDaoImpl();
+		
+		//2. call method: getAllStudents
+		List<Student> list=dao.getAllStudents();
+		
+		//3. Send data to UI as attribute
+		req.setAttribute("list", list);
+		
+		//4. Goto UI Page : Data.jsp
+		RequestDispatcher rd=req.getRequestDispatcher("Data.jsp");
+		rd.forward(req, resp);
+		
+	}
+}
+
+
+4. Create JSP Page : Data.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"
+    isELIgnored="false"
+    %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<H3>WELCOME TO STUDENT DATA PAGE</H3>
+<table border="1">
+	<tr>
+		<th>ID</th>
+		<th>NAME</th>
+		<th>FEE</th>
+	</tr>
+	<c:forEach items="${list}" var="ob">
+		<tr>
+			<td>${ob.stdId} </td>
+			<td>${ob.stdName} </td>
+			<td>${ob.stdFee} </td>
+		</tr>
+	</c:forEach>
+</table>
+</body>
+</html>
+
+5. pom.xml : To work with JSTL (JSP Standard Tag Library)
+		<dependency>
+			<groupId>jstl</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+=====================================================================
+Note:
+1. To get fully qualified name of class(package name + className)
+   use : __.class.getName();
+
+Ex:      " from " + Student.class.getName()  
+    and  " from  in.nit.model.Student "   are same.
+
+2. To send data from Servlet to Servlet/JSP use Attributes concept
+         request.setAttribute(key,val);
+   key -> String type
+   val -> object type
+
+3. To move from one Servlet/JSP to another Servlet/JSP/HTML 
+   use RequestDispatcher.
+
+
+4. JSTL = JSP Standard Tag Library
+   (Writing java code in TAGs Format)
+
+S#1 Add dependency
+<dependency>
+  <groupId>jstl</groupId>
+  <artifactId>jstl</artifactId>
+  <version>1.2</version>
+</dependency>
+
+S#2 Provide taglib(import)
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+S#3 Enable EL 
+<%@page ....  isELIgnored="false"  %>
+
+S#4 Follow below Syntax to Use For Each Loop
+
+ <c:forEach  items="${key}"  var="tempVariable">
+
+ </c:forEach>
+
+ex: <c:forEach items="${list}" var="ob">
+
+
+   </c:forEach>
+
+#5 Use below syntax to read data
+   ${tempVariable.modelClassVariable}
+
+ex: ${ob.stdId}  => equals to ob.getStdId();
+
+======================================================
+
+

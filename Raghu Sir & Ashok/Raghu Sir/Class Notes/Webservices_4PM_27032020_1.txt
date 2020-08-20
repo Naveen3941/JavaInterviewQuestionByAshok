@@ -1,0 +1,317 @@
+                             JAXB Part#2  03/27/2020
+ Working on Annotations:-
+
+a. @XmlRootElement *: This annotation must be applied at model class level
+    So, that JAXB Marshalling/Unmarshalling is going work , else not.
+
+Ex:#1
+  @XmlRootElement                   In XML File
+  class  Employee{ }          <employee> ... </employee>
+Ex#2
+ @XmlRootElement(name="emp-data")  In Xml File
+ class Employee{ }                <emp-data> ... </emp-data>
+
+------------------------------------------------------------------
+b. @XmlAttribute : By default every variable behaves like element/tag.
+   To convert any variable as attribute use this annotation.
+     (Optional)
+Ex#1
+  @XmlRootElement                      XML File Output
+  class  Employee{                    <employee empId='10'> ... </employee>
+    @XmlAttribute
+    private int empId;
+  }          
+
+** We can even provide element name externally, given as:
+Ex#2
+  @XmlRootElement                      XML File Output
+  class  Employee{                    <employee eid='10'> ... </employee>
+    @XmlAttribute(name="eid")
+    private int empId;
+  }  
+-------------------------------------------------------------
+c. @XmlTransient : To avoid any variable taking into XML Operations
+        (Marshalling/Unmarshalling) then use this annotation.
+  (Optional)
+** Variable exist in model, may be stored in DB and also shown at UI.
+  But not shown at XML file.
+
+Ex#1
+  @XmlRootElement                     
+  class  Employee{                   In Xml File <empDept> is not displayed
+     @XmlTransient
+     private String empDept;
+  }  
+---------------------------------------------------------------
+d. @XmlElement: To provide element details like name.., we can use thid
+  By default variable name is taken as element name. To modify that use
+  this annotation.
+
+Ex#1
+@XmlRootElement                      In XML File
+class Employee{                    <employee>
+ @XmlElement(name="ename")              <ename>AA</ename>
+ String empName;                   </employee>
+}
+
+*** To enable above annotations (b),(c) and (d) write @XmlAccessorType
+  over model class. Ex:
+
+Ex#1
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Employee {
+ ...
+}
+******************************** Code **************************************
+1. pom.xml
+<properties>
+		<maven.compiler.source>13</maven.compiler.source>
+		<maven.compiler.target>13</maven.compiler.target>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>2.2.11</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-core</artifactId>
+			<version>2.2.11</version>
+		</dependency>
+	</dependencies>
+2. Model class
+package in.nit.model;
+//ctrl+shift+O (imports)
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+//class + JAXB Annotations=> JABX Class
+@XmlRootElement(name = "emp-data") // <employee> .. </employee>
+
+//Enable JAXB Annotations which are defined on FIELDs(variables)
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Employee {
+
+	@XmlAttribute(name="employee-id")
+	private int empId;
+	
+	@XmlElement(name="employee-name")
+	private String empName;
+	@XmlElement(name="employee-salary")
+	private double empSal;
+	
+	@XmlElement(name="employee-project")
+	private String empProject;
+	
+	@XmlElement(name="employee-experience")
+	private double empExp;
+	
+	//Ignore any variable 
+	@XmlTransient
+	private String empDept;
+	
+	
+	//atl+shift+S,O>DeselectAll>OK
+	public Employee() {
+		super();
+	}
+	//atl+shift+S,R>SelectAll>OK
+	public int getEmpId() {
+		return empId;
+	}
+	public void setEmpId(int empId) {
+		this.empId = empId;
+	}
+	public String getEmpName() {
+		return empName;
+	}
+	public void setEmpName(String empName) {
+		this.empName = empName;
+	}
+	public double getEmpSal() {
+		return empSal;
+	}
+	public void setEmpSal(double empSal) {
+		this.empSal = empSal;
+	}
+	public String getEmpDept() {
+		return empDept;
+	}
+	public void setEmpDept(String empDept) {
+		this.empDept = empDept;
+	}
+	
+	public String getEmpProject() {
+		return empProject;
+	}
+	public void setEmpProject(String empProject) {
+		this.empProject = empProject;
+	}
+	public double getEmpExp() {
+		return empExp;
+	}
+	public void setEmpExp(double empExp) {
+		this.empExp = empExp;
+	}
+	//alt+shift+S,S>OK
+	@Override
+	public String toString() {
+		return "Employee [empId=" + empId + ", empName=" + empName + ", empSal=" + empSal + ", empProject=" + empProject
+				+ ", empExp=" + empExp + ", empDept=" + empDept + "]";
+	}
+	
+	
+}
+
+3. Test class (Object->XML)
+package in.nit.test;
+//ctrl+shift+O (imports)
+import java.io.File;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import in.nit.model.Employee;
+public class TestObjectToXmlNew {
+	public static void main(String[] args) {
+		try {
+			//output XML File location with name
+			File fileOb=new File("E:/OnlineNotes/emps.xml");
+		
+			Employee emp=new Employee();
+			emp.setEmpId(101);
+			emp.setEmpName("BB");
+			emp.setEmpSal(3.3);
+			emp.setEmpDept("DEV");
+			emp.setEmpProject("NIT PRJ");
+			emp.setEmpExp(3.5);
+			
+			// method newInstance says work for Employee obj<->XML
+			JAXBContext context=JAXBContext.newInstance(Employee.class);
+			
+			Marshaller m=context.createMarshaller();
+			
+			//emp->XML -> File(.xml)
+			m.marshal(emp, fileOb);
+			
+			System.out.println("done");
+			///run : ctrl+F11
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+}
+
+*** If XML element value is NULL then tag is not displayed.
+  default values are: int-0, double=0.0, String-null, boolean=false.
+
+ 
+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ 
+ +                       Unmarshalling Steps                               +
+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ +=+ +=+
+ 
+Step#1 Define Existed XML File location using java.io.File object
+  
+    File fileOb=new File("E:/OnlineNotes/emps.xml");
+
+Step#2 Create JAXBContext object for Model class 
+
+   JAXBContext context=JAXBContext.newInstance(Employee.class);
+
+Step#3 Create Unmarshaller object using method createUnmarshaller() which
+      is defined in JAXBContext.
+
+  Unmarshaller um=context.createUnmarshaller();
+
+Step#4 Call method unmarshal() which takes java.io.File as input and
+      returns Object(java.lang) which must be downcasted.
+
+     Object ob=um.unmarshal(fileOb);
+
+     Employee emp=(Employee)ob;
+
+Step#5 Print data.
+          sysout(emp);
+
+--Ex#2---------------
+			//File location (XML File)
+			File fileOb=new File("E:/OnlineNotes/emps.xml");
+
+			//Create JAXBContext object for Model class
+			JAXBContext context=JAXBContext.newInstance(Employee.class);
+
+			//create Unmarshaller object using context
+			Unmarshaller um=context.createUnmarshaller();
+
+			//call method: unmarshal
+			Object ob=um.unmarshal(fileOb);
+
+			System.out.println(ob); 
+			//toString() : Dynamic Polymorphisum
+			
+			//DownCasting result data
+			/*if(ob instanceof Employee) { //it avoids ClassCastException
+				Employee emp=(Employee)ob;
+				System.out.println(emp);
+				System.out.println(emp.getEmpProject());
+				System.out.println(emp.getEmpExp());
+			}*/
+
+
+==================Full test class code====================================
+package in.nit.test;
+
+import java.io.File;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+
+import in.nit.model.Employee;
+
+public class TestXmlToObject {
+
+	public static void main(String[] args) {
+		try {
+			//File location (XML File)
+			File fileOb=new File("E:/OnlineNotes/emps.xml");
+
+			//Create JAXBContext object for Model class
+			JAXBContext context=JAXBContext.newInstance(Employee.class);
+
+			//create Unmarshaller object using context
+			Unmarshaller um=context.createUnmarshaller();
+
+			//call method: unmarshal
+			Object ob=um.unmarshal(fileOb);
+
+			System.out.println(ob); 
+			//toString() : Dynamic Polymorphisum
+			
+			//DownCasting result data
+			/*if(ob instanceof Employee) { //it avoids ClassCastException
+				Employee emp=(Employee)ob;
+				System.out.println(emp);
+				System.out.println(emp.getEmpProject());
+				System.out.println(emp.getEmpExp());
+			}*/
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
+
+
+
+

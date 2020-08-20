@@ -1,0 +1,334 @@
+03/27/2020
+HQL Non-select Operations
+
+HQL=>Hibernate Query Language
+SQL=>DB Dependent , HQL-> independent
+
+SQL-> columnNames and tableName
+HQL-> variableName and className
+
+
+Non-select:(2)update,delete
+HQL will not support bulk insert (ie insert multiple rows at a time)
+  ses.save(obj);
+*** Spring Boot Data JPA (ORM) save(List<Object>)
+
+**HQL supports only Bulk update and delete.
+
+----------Update SQL Syntax----------------------------------
+UPDATE <TABLE-NAME>
+SET   <COLUMN>=<VALUE>,<COLUMN>=<VALUE>,<COLUMN>=<VALUE>,...
+WHERE <CONDITION>;
+
+EXAMPLE SQL:
+UPDATE   EMPTAB
+SET      ENAME='ABCDEF',ESAL=999.99,DEPT='DEV'
+WHERE    EID=95;
+
+** Result/Output: int (count) no.of rows effected in Database.
+
+-=-=-=-=-=-=-=-=-=-=Update HQL Query=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+EXAMPLE HQL:
+UPDATE   in.nit.model.Employee
+SET      empName='ABCDEF',empSal=999.99,deptName='DEV'
+WHERE    empId=95;
+
+
+##Programming Steps##
+#1. Define one HQL Query (String)
+
+#2. Create Query Object using session
+
+#3. pass inputs if exist in HQL
+
+#4. execute query using Query method 
+        q.executeUpdate()
+    that returns int count
+
+** count = no.of rows effected[modified/deleted].
+
+#5 Print result(count)
+
+
+Q)*** What is the difference between list() and executeUpdate() in Query?
+A) method list() is used for select operation. It will convert 
+   one  row ----into ---> one Object, at last all rows are stored in List
+   Collection. ex: List<Employee>
+
+  method: executeUpdate() is used for non-select operations(update/delete).
+  It returns int (count) no.of rows modified/removed in db tables.
+
+
+  
+Q)When Transaction management is required in Hibernate/JPA?
+A) If we are performing non-select operation like save(),update(),delete(),
+  saveOrUpdate(), HQL-non-select operations[update/delete]
+   then Tx management is required. else not.
+
+ Otherwise Hibernate throws Exception like:
+   TransactionRequiredException: Executing an update/delete query
+
+
+Q) What is meaning of createQuery():Session
+A)  It will read HQL as input and convert it into SQL by using Dialect.
+
+=========Example#1===========
+1. Model class
+package in.nit.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import lombok.Data;
+
+@Data
+@Entity
+@Table(name="emptab")
+public class Employee {
+	@Id
+	@Column(name="eid")
+	private Integer empId;
+	@Column(name="ename")
+	private String empName;
+	@Column(name="esal")
+	private Double empSal;
+	@Column(name="dept")
+	private String deptName;
+}
+#2 hibernate.cfg.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<hibernate-configuration>
+	<session-factory>
+		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/nithib</property>
+		<property name="hibernate.connection.username">root</property>
+		<property name="hibernate.connection.password">root</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQL55Dialect</property>
+		<property name="hibernate.show_sql">true</property>
+		<property name="hibernate.format_sql">false</property>
+		<property name="hibernate.hbm2ddl.auto">update</property>
+		<mapping class="in.nit.model.Employee"/>
+	</session-factory>
+</hibernate-configuration>
+#3 Test class#1 (insert few records)
+#4 Test class#2 (Update few records)
+package in.nit.test.one;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
+
+import in.nit.model.Employee;
+import in.nit.util.HibernateUtil;
+
+public class TestUpdate {
+	
+	public static void main(String[] args) {
+		Session ses=HibernateUtil.getSf().openSession();
+		Transaction tx=null;
+		try(ses) {
+			tx=ses.beginTransaction();
+			
+			//#1. Define HQL String
+			String hql=" UPDATE " + Employee.class.getName()
+					+" SET empName=:empName, empSal=:empSal, deptName=:deptName " 
+					+" WHERE empId=:empId ";
+			
+			//#2. Create Query Object.
+			// Dialect->HQL=>SQL
+			Query q=ses.createQuery(hql);
+			
+			
+			//#3. pass inputs to Query (any order is fine)
+			q.setParameter("empId", 13);
+			q.setParameter("empName", "TTR");
+			q.setParameter("empSal", 888.88);
+			q.setParameter("deptName", "DEV");
+			
+			//#4. Execute Query(no.of rows effected=count) 
+			int count=q.executeUpdate();
+			
+			tx.commit();
+			
+			//#5. print result
+			System.out.println(count);
+			
+		} catch (Exception e) {
+			if(tx!=null && tx.getStatus().canRollback()) {
+				tx.rollback();
+			}
+			e.printStackTrace();
+		}
+		
+		
+	}
+}
+pom.xml
+<properties>
+		<maven.compiler.source>13</maven.compiler.source>
+		<maven.compiler.target>13</maven.compiler.target>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>5.4.10.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.12</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.46</version>
+		</dependency>
+	</dependencies>
+===================================================================
+Q) StringBuffer v/s StringBuilder
+ StringBuffer JDK 1.0 (Multithreaded Env) -Web based Application
+ StringBuilder JDK 1.5 (Single user App)
+
+==Test class code in Short format=============
+
+	public static void main(String[] args) {
+		Session ses=HibernateUtil.getSf().openSession();
+		Transaction tx=null;
+		try(ses) {
+			tx=ses.beginTransaction();
+			String hql=new StringBuilder(" UPDATE ")
+					.append(Employee.class.getName())
+					.append(" SET empName=:empName, empSal=:empSal, deptName=:deptName  ")
+					.append(" WHERE empId=:empId ")
+					.toString();
+
+			int count=
+					ses.createQuery(hql)
+					.setParameter("empId", 13)
+					.setParameter("empName", "AA")
+					.setParameter("empSal", 99.88)
+					.setParameter("deptName", "ADEV")
+					.executeUpdate();
+
+			tx.commit();
+			System.out.println(count);
+
+		} catch (Exception e) {
+			if(tx!=null && tx.getStatus().canRollback()) {
+				tx.rollback();
+			}
+			e.printStackTrace();
+		}
+	}
+======Test class code in very short format===============
+public static void main(String[] args) {
+		Session ses=HibernateUtil.getSf().openSession();
+		Transaction tx=null;
+		try(ses) {
+			tx=ses.beginTransaction();
+
+			//better performance
+			int count=
+					ses.createQuery(
+							new StringBuilder(" UPDATE ")
+							.append(Employee.class.getName())
+							.append(" SET empName=:empName, empSal=:empSal, deptName=:deptName  ")
+							.append(" WHERE empId=:empId ")
+							.toString()
+							)
+					.setParameter("empId", 13)
+					.setParameter("empName", "AA")
+					.setParameter("empSal", 99.88)
+					.setParameter("deptName", "ADEV")
+					.executeUpdate();
+
+			tx.commit();
+			System.out.println(count);
+
+		} catch (Exception e) {
+			if(tx!=null && tx.getStatus().canRollback()) {
+				tx.rollback();
+			}
+			e.printStackTrace();
+		}
+	}
+=======Test class with Runtime Inputs===================
+package in.nit.test.one;
+
+import java.util.Scanner;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
+
+import in.nit.model.Employee;
+import in.nit.util.HibernateUtil;
+
+public class TestUpdate {
+
+	public static void main(String[] args) {
+		Session ses=HibernateUtil.getSf().openSession();
+		Transaction tx=null;
+		Scanner sc=new Scanner(System.in);
+		try(ses) {
+			tx=ses.beginTransaction();
+
+			System.out.println("ENTER DETAILS FOR UPDATE OPERATION");
+
+			System.out.println("EMPLOYEE ID:");
+			int empId=sc.nextInt();
+			
+
+			System.out.println("EMPLOYEE NAME:");
+			String empName=sc.next();
+
+			
+			System.out.println("EMPLOYEE SALARY:");
+			double empSal=sc.nextDouble();
+			
+			
+			System.out.println("EMPLOYEE DEPT NAME:");
+			String deptName=sc.next();
+			
+			
+			//better performance
+			int count=
+					ses.createQuery(
+							new StringBuilder(" UPDATE ")
+							.append(Employee.class.getName())
+							.append(" SET empName=:empName, empSal=:empSal, deptName=:deptName  ")
+							.append(" WHERE empId=:empId ")
+							.toString()
+							)
+					.setParameter("empId", empId)
+					.setParameter("empName", empName)
+					.setParameter("empSal", empSal)
+					.setParameter("deptName", deptName)
+					.executeUpdate();
+
+			tx.commit();
+			
+			
+			if(count!=0)
+				System.out.println("Data is modified successfuly");
+			else
+				System.out.println("Employee Id is not found");
+
+		} catch (Exception e) {
+			if(tx!=null && tx.getStatus().canRollback()) {
+				tx.rollback();
+			}
+			e.printStackTrace();
+		}
+	}
+}
+
+** Scanner also supports AutoCloseable
+ try(ses;sc;..){
+ 
+ }
+----------------------------------------------

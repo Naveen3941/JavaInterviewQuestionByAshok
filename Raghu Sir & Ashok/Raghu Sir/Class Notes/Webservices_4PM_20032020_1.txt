@@ -1,0 +1,223 @@
+@Expose: (Gson API)
+ This annotation is used to consider a variable(Field) to be taken into JSON
+ covnersion. 
+
+=> In simple it is reverse to @Transient in JACKSON.
+=> @Transient will not take variables(Field) into JSON.
+=> By Defaut @Expose is not going to work. It must be activated, like
+  Gson g=new GsonBuilder()
+	.excludeFieldsWithoutExposeAnnotation()
+        .create();
+--Code------------------------------------
+pom.xml
+	<properties>
+		<maven.compiler.source>13</maven.compiler.source>
+		<maven.compiler.target>13</maven.compiler.target>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.8.6</version>
+		</dependency>
+	</dependencies>
+Model class
+package in.nit.model;
+//ctrl+shift+O
+public class Student {
+	@Expose //plz use this property in JSON
+	private Integer stdId;
+	
+	@Expose //plz use this property in JSON
+	private String stdName;
+	private Double stdFee;
+	private String stdCourse;
+	private String secureCode;
+  //def const, set/get, toString..
+}
+Test class:
+package in.nit.test;
+//ctrl+shift+O
+public class TestObjectToJson {
+
+	public static void main(String[] args) {
+		try {
+			Student s=new Student();
+			s.setStdId(100);
+			s.setStdName("AA");
+			s.setStdFee(3.6);
+			s.setStdCourse("WEBSERVICES");
+			s.setSecureCode("ABCNIT123");
+			
+			Gson g=new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+			String json=g.toJson(s);
+			System.out.println(json);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
+-------------------------------------------------------------------------------
+@Expose : It consider a variable that is taken from object and shown in JSON
+  even taken from JSON and placed in Object.
+
+@Expose having 2 attribute 
+a. serialize (default - true)   [Object -> JSON]
+b. deserialize (default - true) [JSON-> Object]
+
+
+*) if serialize=false then data exist in object but not given to JSON String
+*) if deserialize=false then data exist in JSON but not given to Object
+*) if deserialize=true/serialize=true then data exist in Object and JSON.
+
+*******************************************************************************
+Example#2
+Model class
+package in.nit.model;
+
+import com.google.gson.annotations.Expose;
+
+public class Student {
+
+	@Expose//plz use this property in JSON
+	private Integer stdId;
+	
+	@Expose(
+			serialize = true,   // take stdName from obj -> show in JSON
+			deserialize = false //Do not take stdName from JSON into Object
+			)
+	private String stdName;
+	@Expose(
+			serialize = false, //data in object (not taken into JSON)
+			deserialize = true //data in JSON -> taken in Object
+			)
+	private Double stdFee;
+	
+	//@Expose(deserialize = false) //default added as serialize=true
+	@Expose(serialize = false) //default added as deserialize=true
+	private String stdCourse;
+  //def const/set,get//toString
+}
+Test class#1
+package in.nit.test;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import in.nit.model.Student;
+
+//Object-> JSON (serialize)
+public class TestObjectToJson {
+
+	public static void main(String[] args) {
+		try {
+			Student s=new Student();
+			s.setStdId(100);
+			s.setStdName("AA");
+			s.setStdFee(3.6);
+			s.setStdCourse("WEBSERVICES");
+			s.setSecureCode("ABCNIT123");
+			
+			Gson g=new GsonBuilder()
+					.excludeFieldsWithoutExposeAnnotation()
+					.create();
+			String json=g.toJson(s);
+			System.out.println(json);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
+Test class#2
+package in.nit.test;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import in.nit.model.Student;
+
+//JSON -> Object (Deserialize)
+public class TestJsonToObject {
+
+	public static void main(String[] args) {
+		try {
+			String json="{\"stdId\":100,\"stdName\":\"AA\",\"stdFee\":3.6,\"stdCourse\":\"WEBSERVICES\",\"secureCode\":\"AAA\"}";
+			
+			Gson g=new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+			
+			Student s=g.fromJson(json, Student.class);
+			System.out.println(s);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
+
+
+******************************************************************************
+Example: working with HAS-A variable and Collection variables
+--code---------
+package in.nit.model;
+public class Address {
+	private String hno;
+	private String loc;
+// def const, set/get, toString..
+ }
+package in.nit.model;
+//ctrl+shift+O
+public class Employee {
+
+	private Integer empId;
+	private String empName;
+	private Address addr; //HAS-A
+
+	private List<String> projects;
+	private Map<String,String> versions;
+  // def const, set/get, toString..
+}
+--Test class---------
+package in.nit.test;
+//ctrl+shift+O
+public class TestObjectToJson {
+	public static void main(String[] args) {
+		try {
+			Address addr=new Address();
+			addr.setHno("5-55/45");
+			//addr.setLoc("HYD");
+			
+			Employee emp=new Employee();
+			emp.setEmpId(120);
+			emp.setEmpName("SAM");
+			emp.setAddr(addr);
+			
+			//JDK 9
+			emp.setProjects(
+			  List.of("P1","P2","P3"));
+			emp.setVersions(
+			 Map.of("P1","R3.2","P2","V1.5","P3","GA-5.5"));
+			
+			
+			Gson g=new GsonBuilder()
+					.setPrettyPrinting()
+					.serializeNulls()//show null values
+					.create();
+			String json=g.toJson(emp);
+			System.out.println(json);
+			//write same data to file
+			Writer writer=new FileWriter("d://empstest.json");
+			g.toJson(emp, writer);
+			writer.close();
+			
+			System.out.println("-DONE-");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
+Q)Where can we add @Expose?
+A) only at variable level not even at method or class
+
+

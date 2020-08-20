@@ -1,0 +1,185 @@
+  			    Date :  01/05/2020
+                   Purchase Order Screen#2 Coding Steps			     
+-------------------------------------------------------------------------------
+#1. Define one Model class that indicates one Line in Screen#2
+    as class name Dtl.
+
+  variables are:  slNo, qty, Part(code,baseCost) and link with Purchase(Parent)
+
+**) To avoid any variable storing in DB , use @Transient annotation.
+
+package in.nit.model;
+//ctrl+shift+O
+@Entity
+public class PurchaseDtl {
+	@Id
+	@GeneratedValue
+	@Column(name="dtlid")
+	private Integer id;
+	
+	//Do now Store in Db, show only at UI
+	@Transient
+	private Integer slno; 
+	
+	@Column(name="dqty")
+	private Integer qty;
+
+	@ManyToOne
+	@JoinColumn(name="dtl_part_fk")
+	private Part part;
+	
+	@ManyToOne
+	@JoinColumn(name="dtl_po_fk")
+	private PurchaseOrder po;
+
+   //generate set/get..toString..
+}
+
+
+#2 Define one HyperLink in PurchaseOrderData.jsp
+  that moves to  SCREEN#2
+
+
+  <a href="parts?poId=${ob.id}">Add Parts</a>
+
+#3 Define method in PartDaoImpl (IPartDao)
+
+ public List<Object[]> getPartIdAndCodes() {
+  String hql=" select id,partCode from in.nit.model.Part ";
+  List<Object[]> list=(List<Object[]>) ht.find(hql);
+  return list;
+ }
+
+
+#4 Define one Method in Purchase Order Controller
+   that provides data required to UI SCREEN#2
+
+   as of now -> PurchaseOrder object to show order code and status
+             -> One Form (Having Parts DropDown and Qty text input)
+	           FORM Backing Object
+             -> DropDown with parts Integration
+	
+	PurchaseOrderController---<> IPartService
+	
+	
+	@RequestMapping("/parts")
+	public String showChilds(
+			@RequestParam("poId")Integer poId,
+			Model model
+			) 
+	{
+		//get Purchase Order Data
+		PurchaseOrder po=service.getOnePurchaseOrder(poId);
+		model.addAttribute("po", po);
+		
+		//Form Backing Object
+		model.addAttribute("purchaseDtl", new PurchaseDtl());
+		
+		//DropDown Data
+		List<Object[]> partsList=partService.getPartIdAndCodes();
+		Map<Integer,String> partsMap=CommonUtil.convert(partsList);
+		model.addAttribute("partsMap", partsMap);
+		
+		
+		return "PurchaseParts";
+	}
+
+#5 Define PurchaseParts.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>    
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h3>WELCOME TO PURCHASE ORDER PARTS (SCREEN#2)</h3>
+<table border="1">
+	<tr>
+		<td>ORDER CODE</td>
+		<td><b>${po.orderCode}</b></td>
+	
+		<td>ORDER STATUS</td>
+		<td><b>${po.status}</b></td>
+	</tr>
+</table>
+<hr/>	
+<form:form action="addPart" method="post" modelAttribute="purchaseDtl">
+<pre>
+SELECT PART:<form:select path="part.id">
+               <form:options items="${partsMap}"/>
+            </form:select>
+Qty  : <form:input path="qty"/>
+	<input type="submit" value="Add Part"/>	
+</pre>
+</form:form>
+	
+</body>
+</html>
+=======================================================================
+**********************************************************************
+                        ADD PARTS OPERATIONS
+
+#1 Add below method in IPurchaseDao and Impl (also service)
+public Integer savePurchaseDtl(PurchaseDtl dtl) {
+	return (Integer) ht.save(dtl);
+}
+
+#2 Define one Method in PurchaseOrderController
+//on click add part button
+@RequestMapping(value = "/addPart",method = RequestMethod.POST)
+public String addPart(@ModelAttribute PurchaseDtl purchaseDtl) {
+		service.savePurchaseDtl(purchaseDtl);
+		Integer poId=purchaseDtl.getPo().getId();
+		//TODO: PO Status change
+		return "redirect:parts?poId="+poId;
+}
+
+#3 Add Bi-Directional Mapping for PurchaseDtl and PurchaseOrder
+   (if we get PurchaseOrder , so we can able to fetch all its childs only)
+
+
+--- PurchaseOrder (Model class)
+	 //We want to fetch all dtls when we get parent object
+	@OneToMany(mappedBy = "po",fetch = FetchType.EAGER)
+	private List<PurchaseDtl> childs;
+
+    //set/get methods
+
+#4 Fetch Childs while showing screen#2 also set slnos
+
+---PurchaseOrderController(C)
+   showChilds() method (URL:"/parts")
+
+=> Add below code
+		//Display all Parts which are added for this PO
+		List<PurchaseDtl> childs=po.getChilds();
+		int i=1; //slno setting
+		for(PurchaseDtl dtl:childs) {
+			dtl.setSlno(i++);
+		}
+		model.addAttribute("childs", childs);
+
+
+#5 Add below code at PurchaseParts.jsp at last
+<table border="1">
+	<tr>
+		<th>SlNo</th>
+		<th>PART</th>
+		<th>BASE COST</th>
+		<th>QTY</th>
+		<th>OPERATION</th>
+	</tr>
+	<c:forEach items="${childs}" var="dtl">
+		<tr>
+			<td>${dtl.slno}</td>
+			<td>${dtl.part.partCode}</td>
+			<td>${dtl.part.baseCost}</td>
+			<td>${dtl.qty}</td>
+			<td>DELETE</td>
+		</tr>
+	</c:forEach>	
+</table>
+----------------------------------------------------------------------

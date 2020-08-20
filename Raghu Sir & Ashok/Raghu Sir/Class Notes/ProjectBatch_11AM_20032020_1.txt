@@ -1,0 +1,211 @@
+** Validations#2 Validating 
+   a.  Radio button
+   b.  DropDown
+   c.  Checkbox
+   by using concept of attributes.
+
+*** Two inputs/divs/element should never contain same ID.
+ex:  <div id="one"> ...</div>
+     <div id="one"> ...</div>  is invaild (it will not work)
+   
+*** Validate multiple options/values at a time as group
+  (4 radio buttons validations, 3 checkboxes validations, 5 options dropdown)
+
+---Example#1.  one.html-------------------------------------------
+<html>
+ <head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+ </head>
+<body>
+<div class="container">
+ <input type="radio" name="format" value="A"/>A
+ <input type="radio" name="format" value="B"/>B
+ <input type="radio" name="format" value="C"/>C
+
+ <br/> <br/>
+
+ <input type="checkbox" name="lang" value="ENG"/>ENG
+ <input type="checkbox" name="lang" value="HIN"/>HIN
+ <input type="checkbox" name="lang" value="TEL"/>TEL
+
+<script>
+$(document).ready(function(){
+  $('input[type="radio"][name="format"]').change(function(){
+     var a=$('input[type="radio"][name="format"]:checked').val();
+	 alert(a);
+  });
+ 
+  $('input[type="checkbox"][name="lang"]').change(function(){
+     var b= $('input[type="checkbox"][name="lang"]:checked').length;
+	 alert(b);
+  });
+});
+</script>
+</div>
+</body>
+</html>
+
+---------Example#2 two.html------------------------------------
+<html>
+ <head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+ </head>
+<body>
+<div class="container">
+ <pre>
+ WhUser Type : 
+   <input type="radio" name="userType" value="Vendor"/> Vendor
+   <input type="radio" name="userType" value="Customer"/> Customer
+
+ Sale For : <input type="text" name="saleFor" id="saleFor" readonly="readonly" class="from-control"/>
+
+   IdType: <select name="idType" id="idType">
+             <option value="">-SELECT-</option>
+             <option value="PAN">PAN</option>
+             <option value="AADHAR">AADHAR</option>
+             <option value="VOTERID">VOTERID</option>
+             <option value="OTHER">OTHER</option>
+          </select>
+		  <span id="idTypeError"> </span>
+  *If Other : <input type="text" name="ifOther" id="ifOther" readOnly/>
+
+ </pre>
+<script>
+$(document).ready(function(){
+  
+
+   $('input[type="radio"][name="userType"]').change(function(){
+      var val=$('input[type="radio"][name="userType"]:checked').val();
+	  if(val=='Vendor'){
+	     $("#saleFor").val('Purchase');
+	  }else if(val=='Customer'){
+	     $("#saleFor").val('Sale');
+	  }
+   });
+
+   $('select[name="idType"]').change(function(){
+      var val=$('select[name="idType"]').val();
+      if(val=='') $("#idTypeError").html("Please choose one option");
+      else if(val=='OTHER') {
+	    $("#ifOther").attr('readonly',false);
+      }
+	  else {
+	    $("#idTypeError").html("");
+		$("#ifOther").attr('readonly',true);
+		$("#ifOther").val('');
+	  }
+   });
+
+
+});
+</script>
+</div>
+</body>
+</html>
+
+---------Ex:#3 EmployeeReg.html---------------
+<html>
+ <head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+ </head>
+<body>
+<div class="container">
+  <h3>Welcome to Register Page</h3>
+
+  <form action="save" method="POST">
+   
+ 
+   <div class="row">
+     <div class="col-4"> <label>Employee Gender </label> </div>
+     <div class="col-4">
+	   <input type="radio" name="empGen" id="empGen1"  value="Male"/> Male
+	   <input type="radio" name="empGen" id="empGen2"  value="Female"/> Female
+	 </div>
+     <div class="col-4" id="empGenError"> </div>
+   </div>
+
+   <div class="row">
+     <div class="col-4"> <label>Employee Languages </label> </div>
+     <div class="col-4">
+	   <input type="checkbox" name="empLang"  value="ENG"/> ENG
+	   <input type="checkbox" name="empLang"  value="HIN"/> HIN
+	   <input type="checkbox" name="empLang"  value="TEL"/> TEL
+	 </div>
+     <div class="col-4" id="empLangError"> </div>
+   </div>
+
+   <input type="submit" id="register" value="Register"/>
+
+  </form>
+</div>
+<script>
+$(document).ready(function(){
+ //1. Hide Error section
+  $("#empLangError").hide();
+  $("#empGenError").hide();
+ //2. define flag for error section
+ var empLangError = false;
+ var empGenError  = false;
+ //3. link with action/event
+ $('input[type="checkbox"][name="empLang"]').change(function(){
+    validate_empLang();
+ });
+ $('input[type="radio"][name="empGen"]').change(function(){
+    validate_empGen();
+ });
+ //4. define validate function
+ function validate_empLang(){
+  var len=$('input[type="checkbox"][name="empLang"]:checked').length;
+  if(len==0){
+    $("#empLangError").show();
+	$("#empLangError").html("Please choose at least one option");
+	$("#empLangError").css("color","red");
+    empLangError = false;
+  }else{
+    $("#empLangError").hide();
+	empLangError = true;
+  }
+  return empLangError;
+ }
+
+ function validate_empGen(){
+   var len=$('input[type="radio"][name="empGen"]:checked').length;
+   if(len==0){
+     $("#empGenError").show();
+	 $("#empGenError").html("Please choose one Gender");
+	 $("#empGenError").css("color","red");
+     empGenError = false;
+   }else{
+     $("#empGenError").hide();
+     empGenError = true;
+   }
+   return empGenError;
+ }
+
+ //------form submit validation------------
+  $("#register").click(function(){
+      empLangError = false;
+	  empGenError  = false;
+
+      validate_empLang();
+	  validate_empGen();
+	  
+	  if(empLangError && empGenError) return true;
+	  else return false;
+  
+  });
+});
+</script>
+
+
+</body>
+</html>

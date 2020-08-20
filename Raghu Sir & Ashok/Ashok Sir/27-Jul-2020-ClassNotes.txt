@@ -1,0 +1,68 @@
+Java Realtime Project Online Training
+-----------------------------------------------
+1) Pre-Requisites
+
+2) Course Content
+
+3) Types of Software Companies
+
+4) Types of Software Jobs
+
+5) Types of software Projects
+
+
+Types of Teams in Project
+--------------------------
+1) Onshore Team
+
+2) Offshore Team
+
+What is Onshore Team?
+---------------------
+The team which is working in client location is called as Onshore Team.
+
+What is Offshore Team?
+----------------------
+The team which is working in non-client location is called as Offshore team.
+
+-> In On-Shore Functional Team members will be available (Functional Team also called as BA team)
+
+-> Functional Team members are responsible to collect Requirements from Client.
+
+-> After Collecting Requirements from client, Functional team members will prepare Business Requirements Document (BRD) and will share with Offshore Team members.
+
+	 - BRD (Business Requirements Document)
+	 - SRS (Software Requirements Specification)
+	 - FDD (Functional Design Document)
+	
+
+-> In Offshore we will have below teams
+	 	
+	> Developement Team
+	> Testing Team
+	> Database Team
+	> DevOps Team
+
+-> Onshore and Offshore team members will communicate through Bridge calls to discuss project related details.
+
+-> Companies will use softwares for Bridge calls
+
+	1) Microsoft Teams
+	2) Jabber with WebEx
+	3) Skype Business etc.....
+
+
+-> Sometimes offshore team member will go onshore location as per client requirement. It is called as Onsite Opportunity
+
+-> Onshore team member will come to offshore location to explain project requirements to offshore team members. It is called Offsite.
+
+
+
+
+
+
+
+
+
+
+

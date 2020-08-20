@@ -1,0 +1,157 @@
+                          Spring Boot Data JPA
+
+*) ORM = Object Relational Mapping
+*) Mapping Rule (Programmer has to follow)
+    one class       =  one table
+    one variable    =  one column
+
+ then ORM will do
+    one  Object     = one row
+
+*) ORM is theory, where Data JPA (Hibernate with JPA) is programming.
+*) Coding Files:-
+1. Model class (Class mapped with Table)
+2. Repository Interface 
+3. Runner class
+4. application.properties
+
+---------------Hibernate/JPA Properties(key-val)---------------
+a)driver-class-name : Database specific driver class name 
+b)url : location of DB
+c)username : user name of database
+d)password : database password
+
+
+
+e)dialect : It is a class, it will generate SQL query on perform operation
+
+Ex: save(obj) => Dialect -> (SQL)INSERT INTO EMPTAB VALUES(...)
+
+=> *** SQL query is DB dependent. So, for every DB one Dialect is provided
+   by Hibernate, which are defined in package : org.hibernate.dialect
+
+=> Ex: To work with Oracle DB use Oracle10gDialect
+       To work with MySQL DB use MySQL55Dialect
+  
+
+
+
+f)show-sql : It is boolean type, default is false.
+   if value is true -> it will display SQL on console.
+   if value is false-> it will not display SQL.
+
+g)format-sql: It will display SQL query on console clause by clause.
+   It is boolean type, default is false.
+   if value is true -> it will display SQL clause by clause.
+   if value is false-> it will display SQL in one line.
+  ex:
+         SELECT
+                 eid,ename
+	 FROM 
+                 emptab
+	 WHERE
+	         esal > ? and ename is not null
+
+h)* ddl-auto : create/update/validate/create-drop
+  => create : Data JPA creates new table every time (old table is dropped if exit)
+  => update :  Data JPA creates new table if not exist.
+               Else uses same(old table).
+  => create-drop : On App start creates new tables(by dropping old tables if exist)
+                  at the end drops all tables.
+        (** Embedded DB default value is create-drop)
+  => validate : Programmer has to take care of creating/dropping tables.
+        (External DB default value is validate).
+--------------------Example to work with Exaternal DB------------------------
+1. application.properties
+## External DB Connection(Datasource) details ##
+spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost:3306/boot
+spring.datasource.username=root
+spring.datasource.password=root
+
+## Hibernate Specific properties ##
+spring.jpa.properties.dialect=org.hibernate.dialect.MySQL55Dialect
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.hibernate.ddl-auto=create
+
+2. Model class
+package in.nit.model;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+public class Product {
+	@Id
+	private Integer prodId;
+	private String prodCode;
+	private Double prodCost;
+	
+}
+
+3. Repository Interface
+package in.nit.repo;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import in.nit.model.Product;
+
+public interface ProductRepository extends JpaRepository<Product, Integer>{
+
+}
+
+4. Runner class
+package in.nit.runner;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
+import in.nit.model.Product;
+import in.nit.repo.ProductRepository;
+
+@Component
+public class ProductRunner implements CommandLineRunner {
+	@Autowired
+	private ProductRepository repo;
+	
+	@Override
+	public void run(String... args) throws Exception {
+		repo.save(new Product(10, "PEN", 45.50));
+		repo.save(new Product(11, "CAR", 55.70));
+		repo.save(new Product(12, "BTL", 98.00));
+		System.out.println("--done--");
+	}
+
+}
+
+pom.xml
+<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<!-- <dependency>
+			<groupId>com.oracle.ojdbc</groupId>
+			<artifactId>ojdbc8</artifactId>
+			<scope>runtime</scope>
+		</dependency> -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.46</version><!--$NO-MVN-MAN-VER$-->
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>

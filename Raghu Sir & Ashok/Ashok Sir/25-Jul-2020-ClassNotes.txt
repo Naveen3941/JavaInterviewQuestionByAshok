@@ -1,0 +1,175 @@
+Yesterday's session : Types of Software Companies
+
+Today's session : Types of Jobs & Types of Projects
+-------------------------------------------------------
+
+Software companies are divided into 3 types
+
+1) Product based
+
+2) Service based
+
+3) Outsourcing
+
+
+
+Types of Jobs
+-------------
+1) Permanent Job
+
+2) Contact Job
+
+You got JOB in TCS company directley (Permanent Job)
+----------------------------------------------------
+Offer letter
+Salary
+PF
+Health Insurance
+Benefits
+Your Will develop project in TCS
+
+Contract Jobs
+------------
+You got job in Tech M through Magna InfoTech
+
+Magna InfoTech -> Your Payroll Company
+--------------------------------------
+Offer letter
+salary
+payslips
+
+Tech M --> Your client company
+-------------------------------
+Project you will do in Tech M
+
+
+Types of Projects
+-----------------
+
+What is Project?
+----------------
+Collection software programs we can call as one Software Project.
+
+Why we need to develop project?
+------------------------------
+To reduce  human efforts
+
+Ex: Ticket Booking, Net Banking, Food delivery etc...
+
+How Many Types of Projects are available in IT industry?
+-------------------------------------------------------
+Software Projects we can divide into 3 types
+
+1) Scratch development projects
+
+2) Maintenence projects
+
+3) Migration Projects
+
+What is Scratch Development?
+----------------------------
+The project which is getting developed from beginning is called as scratch development project.
+
+These kind of projects are less in industry 
+
+Note : If you are part of Scratch Development Project in company you are lucky bcz lot of learning scope will be available.
+
+Maintenence Projects
+--------------------
+-> Maintenence Projects are also called as Support Projects
+
+-> In Maintenence Projects we can see below types of works
+
+	a) Change Request (CR)
+	b) Enhancements
+	c) Bug Fixing (Production Support)
+
+What is Change Request?
+-----------------------
+-> Client will ask to change existing functionality of the screen in project
+
+-> Existing functionaity in the project we need to change as per client requirement.
+
+
+What is Enhancement?
+---------------------
+Adding new functionality in existing project is called as Enhancement.
+
+What is Bug fixing?
+------------------
+When project is using by clients/end users, we may get some exceptions. We have to fix them.
+
+-> Bug fixing also called as Production Support
+
+Migration Projects
+------------------
+-> Changing the project from one technology to another technology 
+
+Ex :  Mainframes ----> Java
+
+
+
+Tomorrow Online Workshop 
+-------------------------
+Swagger 2 with Spring Boot 
+(REST API Documentation)
+
+Timings : 10 AM - 12:00 PM
+
+Youtube live class
+
+YouTube Channel : Ashok IT
+
+
+Fee : 6000 INR
+
+Google pay / phone pay : 9701787666
+
+After payment you have to send your details to our payments team (ashokitpayments@gmail.com)
+
+1)Name
+2)Contact Number
+3)Course name (11-JRTP)
+4) Payment screenshot
+
+
+
+
+Whatsapp Number : +91-6301921083
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

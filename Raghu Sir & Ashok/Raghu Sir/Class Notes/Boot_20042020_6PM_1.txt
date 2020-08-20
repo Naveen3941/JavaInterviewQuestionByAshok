@@ -1,0 +1,87 @@
+                Spring + Spring Boot + Spring Cloud(Microservice)
+           		      90 Session 
+========================================================================
+Introduction to Spring Boot:-
+---------------------------------
+
+*)Work of Spring f/w : Container:
+ Container will do below works
+ a. Detect the class(Spring Bean) and creates object to it
+ b. Provide data to object(injection)
+ c. Link objects (link object with another object)
+ d. Finally Destroy the object
+
+=> Programmer has to provide 2 inputs:
+ a. Spring Bean (class + Rules given by Spring container)
+ b. Spring Configuration File (XML/Java/Annotation)
+     XML Configuration is legacy (not available in Spring boot)
+
+
+
+Q) What is Spring boot?
+A) Spring Boot is Spring Based Framework (and it is like Abstract Project)
+   which provide AutoConfiguration(common things to child project
+   and reduces programmer work).
+---Example--------------------------------------------------------
+  Spring F/w : Database Example
+  (Programmer has to follow below steps and coding part)
+1. classes : DataSource - DriverManagerDataSource
+2. Java based Configuration
+  @Configuration
+  public class AppConfig{
+    @Bean
+    public  DriverManagerDataSource ds(){
+       DriverManagerDataSource ds=new  DriverManagerDataSource();
+       ds.setDriverClassName(__);
+       ds.setUrl(__);
+       ds.setUsername(_);
+       ds.setPassword(_);
+       return ds;
+    }
+  }
+3. Jars (Maven-> ojdbc/Mysql-connector jar)
+4. Database (Download and Install)
+5. Operations (insert,update,delete and select)
+
+========================================
+  Spring Boot : Database Example
+   AutoConfiguration: Reduce common works in project
+   by providing a starter which look like:
+
+   spring-boot-starter-[____]
+ 
+(Programmer has to follow below steps and coding part)
+  spring-boot-starter-jdbc  
+  (Step#1,2,3,5)
+
+ => Web Application in Spring - 1000 (Programmer)
+                    in SpringBoot - 250  (Programmer)
+		          750 code  - (spring-boot-starter-web)
+ => Email Application
+          in Spring - 500 Line of Code (Programmer)
+	  in Spring boot - 100 Line of Code (Programmer)
+	       400 LOC - (spring-boot-starter-mail)
+
+ => Security Application
+           in Spring - 600 Line of Code (Programmer)
+	  in Spring boot - 300 Line of Code (Programmer)
+	       300 LOC - (spring-boot-starter-security)
+
+ => Like: Cloud Application, DevTools, Actuators, Integrations
+       (Apache Kafka,Camel..), Security, Mail Services,
+       RestWebservies,..etc
+    
+============================================================     
+
+FB:
+ https://www.facebook.com/groups/thejavatemple/
+email:
+ javabyraghu@gmail.com
+
+
+
+
+
+
+
+

@@ -1,0 +1,65 @@
+Java Realtime Project Online Training
+-------------------------------------
+Batch Code : 11-JRTP
+
+Pre-Requisites
+---------------
+Core Java 
+(OOPS, Collections, Exception Handling, Multi Threading, Annotations & Generics)
+
+Adv Java (JDBC, Servlets & JSP)
+
+Frameworks (ORM Basics, Spring IOC, Spring MVC)
+
+Oracle (SQL)
+
+Course Content
+--------------
+Part-1 : Industry Terminology & Industry Process
+
+Part-2 : Realtime Tools (25+ Tools)
+
+Part-3 : Mini Projects Development with Realtime standards
+
+Part-4 : Major Project
+
+Part-5: Interview Guide
+
+Daily  Timing : 11:30 AM to 1 PM IST
+Duration : 90 Days (Monday - Saturday)
+Fee : 6000 INR (online payment)
+
+Daily Class Notes will be provided
+
+Class Records : Not available
+YouTube channel : Ashok IT
+Facebook Group Name : Ashok IT
+
+UI Free classes (HTML5, CSS3, JS, Boot strap)
+
+Payment 
+-------
+Fee : 6000 INR
+
+Google pay / Phone pay : 9701787666
+
+After payment send your details to ashokitpayments@gmail.com
+
+1) Your Name
+2) Contact Number
+3) WhatsApp Number
+4) Course (code) - 11-JRTP
+5) Payment screenshot
+
+
+
+
+
+
+
+
+
+
+
+
+

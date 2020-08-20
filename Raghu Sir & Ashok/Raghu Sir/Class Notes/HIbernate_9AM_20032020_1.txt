@@ -1,0 +1,79 @@
+              
+		            Input to HQL
+--------------------------------------------------------------------------
+  SQL: select ename from emptab where dept=?;
+    Symbol ? place holder - positional parameter (zero)(0,1,2,3...)
+
+
+   Positional parameter (Input based on index number)
+   This concept is used to pass inputs to query at runtime 
+
+ 
+  SQL:
+    select
+      ename, esal
+    from 
+      emptab
+    where
+         eid  > ?0
+    and  esal < ?1
+    or   ename= ?2
+
+select * from student
+ where sname=?0 and smobile=?1 or scourse=?2
+
+----------------------------------------------------------------------
+Step#1 in HQL query provide inputs that comes at runtime using symbol ?0,?1,?2,?3..
+Step#2 After Query object and before execution(list/uniqueResult) call
+      method 
+               query.setParameter(position,data);
+Step#3 Execute and print 
+
+---------Ex#1--------------------------------------
+System.out.println("Enter any Employee Id to fetch data:");
+Scanner sc=new Scanner(System.in);
+int eid=sc.nextInt();
+
+String hql="from in.nit.model.Employee where empId>?0";
+Query q=ses.createQuery(hql);
+q.setParameter(0, eid);
+List<Employee> list= q.list();
+list.forEach(System.out::println);
+-------------Ex#2-----------------------------------------
+uniqueResult() :  If Query is fetching only one row data then use
+   this method else use list();
+
+System.out.println("Enter any Employee Id to fetch data:");
+Scanner sc=new Scanner(System.in);
+int eid=sc.nextInt();
+
+String hql="from in.nit.model.Employee where empId=?0";
+Query q=ses.createQuery(hql);
+q.setParameter(0, eid);
+Object ob=q.uniqueResult();
+Employee e=(Employee)ob;
+System.out.println(e);
+-----------------------------------------------------
+** Named Parameters= Passing Parameter name insted of position number
+  which makes query effective in case of lengthy Query.
+
+
+ex:  :abc, :empId, :proCode...  these names are case-sensitive
+    these can be in any order
+   
+Example:-
+	String hql="from in.nit.model.Employee "
+					+ " where empId > :empId  and empSal=:empSal  or empName = :empName ";
+			
+			Query q=ses.createQuery(hql);
+			
+			q.setParameter("empId", 10);
+			q.setParameter("empName", "AA");
+			q.setParameter("empSal", 3.3);
+			
+			List<Employee> emps= q.list();
+			
+			emps.forEach(System.out::println);
+
+
+

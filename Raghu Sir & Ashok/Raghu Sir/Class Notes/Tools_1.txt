@@ -1,0 +1,61 @@
+			Date : 21/05/2020
+			Tools Class # 2PM
+			    By Mr.RAGHU
+			javabyraghu@gmail.com
+		https://www.facebook.com/groups/thejavatemple/
+-------------------------------------------------------------------------------
+                 Planing -> Development -> Deployment ->  Maintain
+		 --------------------------------------------------
+
+1. AGILE PROCESS (Role#BA) - JIRA
+
+=> Multiple Customer Spcific - Product Based (ex: Nokia Mobile)
+=> Client specific Software  - Project Based (ex: BookMyShow)
+
+-> BA gathers requirements from Customers/Market outsource/Clients..etc
+-> BA will prepare one complete document "EPIC" [FULL AND FINAL DOCUMENT]
+-> EPIC -> small parts Tasks(Story/Bug/Issue..etc)
+-> Tasks are assigned to Developer todo work (Sprint Plan and execution)
+
+-------------------------------------------------------------
+2. CODING AND UNIT TESTING (Role#DEV)
+
+=> By using  Maven/Gradle we can get all required Jars of a Project
+   - Spring Jars/Hibernate Jars/Webservices Jars/... 
+
+=> IDE (Integrated Development Enviroment) - STS/Eclipse
+   
+=> UnitTest must be done by Dev only, by using tools like JUnit with Mocking 
+
+=> Implement Logging (Finding Errors/Problems in realtime server like Production)
+   by using tools like Log4J/SLF4J..etc
+
+=> Code must be sent to (all .java/.jsp/.xml/.html/.properties files)
+   one Repository Software(Version Controlling) : SVN/GITHUB
+--------------------------------------------------
+3. DEVELOPMENT OPERATIONS (Role#DevOps Team)
+
+=> Provide setup and Configuration for GITHUB for VersionControlling
+
+=> Build our project into .jar/.war format using Build Tool Maven/Gradle
+
+=> Must Configure Jenkins for Continius Build+Deployment.
+
+=> All Runtime-Env Softwares must be packed and given as one Image Software
+   ie done by Container Image Systems. Ex: Docker
+
+=> To run our application and share it globally we need one cloud Env.
+   like AWS/Google Cloud/AZURE.
+
+=> Auto-scal/Load Balance / Container handling must be done by Kubernetes tool
+
+=> Deployments and configuration must be handled by a Tool like Ansible
+   (ex: PORT Number config, Connection Config..etc)
+
+=> After successful Deploy to cloud link with one DSN to provide 
+  EASY URL : ex: http://nareshit.com
+---------------------------------------------------------------------------
+4. ACCESS SERVICE (Role#4 EndUser)
+
+=> Use one client machine like Browser and make request and gets Response.
+  
