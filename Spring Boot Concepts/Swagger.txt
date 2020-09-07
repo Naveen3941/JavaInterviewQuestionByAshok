@@ -1,0 +1,11 @@
+Swagger
+--------
+->Swagger is used to generate documentation for REST API
+
+->Swagger UI is used to test the functionality of REST API
+
+->Using this Swagger Documentation, rest client can be developed.
+
+->Swagger is an API
+
+->Swagger will generate documentation in JSON format

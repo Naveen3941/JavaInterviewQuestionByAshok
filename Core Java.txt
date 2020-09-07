@@ -565,4 +565,8 @@ public class AnnoymousExample {
   final means we cant modifiable it is fixed.it is illegal combination of modifiers in java (abstract and final).
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  
+ @Modifying
+@Query("update User u set u.firstname = ?1, u.lastname = ?2 where u.id = ?3")
+void setUserInfoById(String firstname, String lastname, Integer userId);
+@Query is for defining custom query and @Modifying is for telling spring-data-jpa that this query is an update operation and 
+it requires executeUpdate() not executeQuery(). 
