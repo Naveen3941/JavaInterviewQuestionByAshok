@@ -206,6 +206,25 @@
   
     No.
 
+-> Can We Invoke At a time two Objects in Synchronized method?
+    Yes. because of obj1 is acuried lock and it completes releases lock and same 
+     obj2 also. it works like two different users can access at a time login.
+
+-> What is Genericsc?
+   Generics supports from Java 1.5 onwards. before ArrayList it will add different 
+    Type of Objects like Homogenious Objects. After Generics it Hold only single type 
+    object. three advantages in Generics
+     1.Type-safe
+     2.Type-casting is not required.
+     3.Compile Time Error.
+
+-> List<? extends Number> list
+   Here ? marks represents wildcard element. Number means super class and itcan support
+   all sub type of super class like (Number is super and Integer,Long,Double these all
+   are su type). instead of ? we can replace any type from super type.
+   There are two typesof wildcard element
+    1.Upper wildcard List<? extends Number> list
+    2.Lower wildcard List<? super Integer> list
 
    
 
