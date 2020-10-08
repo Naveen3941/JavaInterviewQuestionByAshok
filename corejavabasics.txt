@@ -227,5 +227,13 @@
     2.Lower wildcard List<? super Integer> list
 
    
+->Internal working of hashset
 
+Hashset creates internally 16 buckets and load factor also 0.75. if it reaches threshold value then it increases 32 buckets. hashset internally calls hashmap.
+whenever we are call add(). if we pass unique value it returns null but inside we are compareing the null method finally it return true. if we pass duplicate element then it 
+return key value finally it will false.
+
+ public boolean add(E e) {
+        return map.put(e, PRESENT)==null;
+    } 
    
