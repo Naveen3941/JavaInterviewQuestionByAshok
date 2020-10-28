@@ -236,4 +236,8 @@ return key value finally it will false.
  public boolean add(E e) {
         return map.put(e, PRESENT)==null;
     } 
+
+-> Difference between Static Binding and Dynamic Binding?
+  Static Binding: When type of the object is determined by compile time is known as Static Binding
+  Dynamic Binding: When type of the object is determined by runtime is known as Dynamic binding.
    

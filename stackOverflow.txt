@@ -1,0 +1,9 @@
+What is @EnableJpaRepository?
+
+-> If the repositories package is a sub-package of the Spring Boot main package, then @SpringBootApplication is enough, as it contains the @EnableAutoConfiguration.
+
+-> But if the repositories package is not a sub-package of the Spring main class package, in that case, we need to declare the repositories packages, 
+  as shown here:@EnableJpaRepositories(basePackages = "com.springbootdev.examples.jpa.repositories")
+  This has to be provided in a configuration class or SpringBootApplication class.
+
+-> Similarly, @EntityScan can be used if the entity package is not a sub-package of the main Spring application package.
