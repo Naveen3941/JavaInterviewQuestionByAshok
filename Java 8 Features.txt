@@ -47,8 +47,15 @@
    in this package contains classes,interface and enums
 
    stream does not store the elements. operation performed on stream doesnot affect the main source.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+java.util.optional.Optional 
 
-
+->it was added in jdk 1.8
+->it public final class
+->it is not participated in inheritance
+->this class is used to deal with nullpointer exception
+->in this class contain so many static method
+   ex:Optional.ofNullable(a[2]) means it return if exist value otherwise it returns null;
 
 
 

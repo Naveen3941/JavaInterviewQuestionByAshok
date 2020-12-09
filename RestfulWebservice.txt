@@ -101,6 +101,14 @@ Every Http status code will one message
 405   http method type mismatched
 5XX    ServerSideError
 
+
+400 Bad Request
+401 UnAuthorized
+404 Resource Not Found
+405 Method Not Allowed
+406 Not Acceptable(Produce and Accept type not matching)
+415 Unsupport MediaType(Consume and Content type Not matching)
+
 What is Design Pattern?
  
 Design Pattern are used to reduce code and time so that application  performance will be improved.

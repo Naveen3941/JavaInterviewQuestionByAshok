@@ -1,0 +1,13 @@
+WinSCP (Windows Secure Copy) :
+------------------------------
+->WinSCP is an open source SecureFTP client for Windows. It allows secure file transfers between the client's local computer and the remote server.
+
+->WinSCP is for file transfer to and from your server ,WinSCP is a file transfer application using Secure FTP.
+
+PuTTY:
+-----
+PuTTY is a free and open-source terminal emulator, serial console and network file transfer application. It supports several network protocols, 
+
+including SCP, SSH, Telnet, rlogin, and raw socket connection. It can also connect to a serial port.
+
+-> while PuTTY is used to interact with the server directly. Putty is just a command line interface to your server. .
